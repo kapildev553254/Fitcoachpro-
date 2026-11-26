@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitCoach Pro — Chandigarh Tricity Studio</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @media print { .no-print { display: none !important; } body { background: #fff !important; } }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 pb-24">
+
+  <!-- 3-DAY TRIAL EXPIRY LOCK SCREEN -->
+  <div id="trialLockModal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-3xl p-6 text-center space-y-4 shadow-2xl border border-slate-200">
+      <div class="w-16 h-16 rounded-2xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center text-3xl mx-auto font-black">🔒</div>
+      <div>
+        <span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase">3-Day Free Trial Completed</span>
+        <h2 class="text-xl font-extrabold text-slate-900 mt-2">Don't Stop Your Progress Now!</h2>
+        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+          Your 3-day free trial with <strong>Coach Kapil Dev</strong> (K11 APT-Pro Certified) has ended. Unlock full access to your customized workouts, Indian macro diet charts, and weekly check-ins.
+        </p>
+      </div>
+      <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-left space-y-1.5 text-xs">
+        <div class="font-extrabold text-slate-900">What You Keep With Full Access:</div>
+        <div class="text-slate-600">✅ Personalized Gym, Home & HIIT Workout Splits</div>
+        <div class="text-slate-600">✅ Custom Indian Diet Plan & Macro Updates</div>
+        <div class="text-slate-600">✅ Direct WhatsApp Form Check & Weekly Progress</div>
+      </div>
+      <button onclick="requestUnlockWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm py-3.5 rounded-2xl shadow-lg">
+        📲 Message Coach Kapil to Unlock
+      </button>
+      <div class="pt-2 border-t border-slate-100 space-y-2">
+        <label class="text-[11px] font-bold text-slate-500 block">Already have an Unlock Code? Enter below:</label>
+        <div class="flex gap-2">
+          <input id="unlockCodeInput" placeholder="Enter Code (e.g. KAPILPRO)" class="flex-1 px-3 py-2.5 bg-slate-100 rounded-xl text-xs font-extrabold uppercase text-center border border-slate-200 focus:outline-none" />
+          <button onclick="verifyUnlockCode()" class="bg-slate-900 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl">Unlock</button>
+        </div>
+        <p id="unlockError" class="hidden text-[11px] text-rose-600 font-bold">Invalid code. Contact Coach Kapil on WhatsApp.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3-DAY TRIAL TOP BANNER -->
+  <div id="trialBanner" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs py-2 px-4 no-print">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="font-bold flex items-center gap-1.5">
+        <span>🎁</span>
+        <span id="trialStatusText">3-Day VIP Free Trial Active — Full Access Unlocked!</span>
+      </div>
+      <button onclick="requestUnlockWhatsApp()" class="bg-slate-950/30 hover:bg-slate-950/50 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg">
+        Upgrade / Join Full Plan →
+      </button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-slate-900 text-white border-b border-slate-800 shadow">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <img id="headerCoachImg" src="" class="hidden w-9 h-9 rounded-xl object-cover border border-emerald-400" />
+        <div id="headerCoachBadge" class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center font-black text-slate-950 text-lg">⚡</div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-base">FitCoach</span>
+            <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold px-1.5 py-0.5 rounded">PRO</span>
+          </div>
+          <span class="text-[10px] text-slate-400 block">Chandigarh Tricity Studio</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="saveBadge" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg">✓ Saved</span>
+        <div class="flex bg-slate-800 p-1 rounded-xl text-xs font-bold">
+          <button id="btnCoach" onclick="toggleCoachProfile()" class="px-2.5 py-1 rounded-lg bg-emerald-500 text-slate-950">👨‍🏫 Coach</button>
+          <button id="btnClient" onclick="closeCoachProfile()" class="px-2.5 py-1 rounded-lg text-slate-300">👤 Client</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- COACH PROFILE PANEL -->
+  <div id="coachProfilePanel" class="hidden bg-slate-900 text-white border-b border-slate-800">
+    <div class="max-w-5xl mx-auto px-4 py-5 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
+        <div class="flex items-center gap-3.5">
+          <div class="relative">
+            <img id="coachAvatarPreview" src="" class="hidden w-20 h-20 rounded-2xl object-cover border-2 border-emerald-400" />
+            <div id="coachAvatarPlaceholder" class="w-20 h-20 rounded-2xl bg-emerald-500/20 border-2 border-dashed border-emerald-400 flex flex-col items-center justify-center text-emerald-400 text-xs font-bold text-center p-1">
+              <span>📷</span>
+              <span class="text-[10px]">Add Photo</span>
+            </div>
+            <label class="mt-1.5 block text-center bg-emerald-500 text-slate-950 text-[10px] font-extrabold px-2 py-1 rounded-lg cursor-pointer">
+              Upload Photo
+              <input type="file" accept="image/*" onchange="uploadCoachPhoto(event)" class="hidden" />
+            </label>
+          </div>
+          <div class="space-y-1">
+            <input id="coachNameInput" oninput="updateCoachInfo('name', this.value)" class="font-extrabold text-base text-white bg-transparent focus:outline-none w-full" />
+            <input id="coachTitleInput" oninput="updateCoachInfo('title', this.value)" class="text-xs font-semibold text-emerald-400 bg-transparent focus:outline-none w-full" />
+            <input id="coachLocationInput" oninput="updateCoachInfo('location', this.value)" class="text-xs text-slate-300 bg-transparent focus:outline-none w-full" />
+            <input id="coachPhoneInput" oninput="updateCoachInfo('phone', this.value)" class="text-xs text-slate-300 bg-transparent focus:outline-none w-full" />
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="shareTrialInvite()" class="bg-amber-400 text-slate-950 text-xs font-extrabold px-3 py-2 rounded-xl">🎁 Send 3-Day Free Trial</button>
+          <button onclick="shareCoachCard()" class="bg-emerald-500 text-slate-950 text-xs font-extrabold px-3 py-2 rounded-xl">📲 Share Coach Card</button>
+          <button onclick="closeCoachProfile()" class="bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-xl">✕ Close</button>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/70 p-4 rounded-2xl border border-slate-700 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 class="text-xs font-extrabold text-amber-400 uppercase">3-Day Trial & Client Unlock Settings</h3>
+          <p class="text-[11px] text-slate-300 mt-0.5">Secret Unlock Code for paid clients: <strong class="text-emerald-400" id="displaySecretCode">KAPILPRO</strong></p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="changeSecretCode()" class="bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl">🔑 Change Code</button>
+          <button onclick="previewLockScreen()" class="bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-bold px-3 py-1.5 rounded-xl">👁️ Test Lock Screen</button>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/70 p-4 rounded-2xl border border-slate-700 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-400">Certifications, Education & Experience</h3>
+          <button onclick="addCoachCredential()" class="text-xs font-bold bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-lg">+ Add Detail</button>
+        </div>
+        <div id="coachCredentialsList" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="bg-slate-900 text-slate-300 border-b border-slate-800 no-print">
+    <div class="max-w-5xl mx-auto px-4 flex gap-2 overflow-x-auto no-scrollbar py-2.5 text-xs font-bold">
+      <button onclick="showTab('exercises')" id="tabBtn-exercises" class="tab-btn bg-emerald-600 text-white px-3.5 py-2 rounded-xl shrink-0">1. Master Exercises, Splits & HIIT</button>
+      <button onclick="showTab('clientData')" id="tabBtn-clientData" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">2. Client Data & Testing</button>
+      <button onclick="showTab('nutrition')" id="tabBtn-nutrition" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">3. Nutrition & Diet</button>
+      <button onclick="showTab('goalsTheory')" id="tabBtn-goalsTheory" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">4. Goals & Theory</button>
+      <button onclick="showTab('media')" id="tabBtn-media" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">5. Videos & Photos</button>
+      <button onclick="showTab('trainingMode')" id="tabBtn-trainingMode" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">6. Online / Home PT</button>
+    </div>
+  </div>
+
+  <!-- Client Selector + Direct WhatsApp Number Bar -->
+  <div class="bg-white border-b border-slate-200 no-print">
+    <div class="max-w-5xl mx-auto px-4 py-2.5 space-y-2">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar" id="clientPills"></div>
+        <button onclick="addNewClient()" class="bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl shrink-0">+ Add Client</button>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-2 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl">
+        <div class="flex items-center gap-2 flex-1 min-w-[220px]">
+          <span class="text-xs font-extrabold text-emerald-900 shrink-0">📱 Client WhatsApp:</span>
+          <input id="activeClientPhone" type="tel" placeholder="10-digit number (e.g. 9876543210)" oninput="updateClientPhone(this.value)" class="w-full text-xs font-extrabold bg-white border border-emerald-300 rounded-lg px-2.5 py-1.5 text-slate-900 focus:outline-none" />
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="sendSelectedExercisesWhatsApp()" class="bg-emerald-600 text-white text-[11px] font-extrabold px-3 py-1.5 rounded-lg">📲 Send Selected (<span id="selectedCountBadge">0</span>)</button>
+          <button onclick="shareDietWhatsApp()" class="bg-slate-900 text-white text-[11px] font-extrabold px-2.5 py-1.5 rounded-lg">🥗 Send Diet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-5xl mx-auto px-4 pt-4 space-y-5">
+
+    <!-- ==================== TAB 1: MASTER EXERCISE BANK, SPLITS & CARDIO/HIIT/FUNCTIONAL ==================== -->
+    <section id="tab-exercises" class="tab-section space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h1 class="text-base font-extrabold text-slate-900">Master Exercise Bank, Splits & HIIT Studio</h1>
+            <p class="text-xs text-slate-500">Tick checkboxes (☑️) to select exercises & send directly to client WhatsApp</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="clearSelectedExercises()" class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-2 rounded-xl">Clear Selection</button>
+            <button onclick="sendSelectedExercisesWhatsApp()" class="bg-emerald-600 text-white text-xs font-extrabold px-3 py-2 rounded-xl">📲 Send (<span id="selectedCountTop">0</span>)</button>
+          </div>
+        </div>
+
+        <!-- 3 Main Sub-Tabs -->
+        <div class="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-extrabold">
+          <button id="exMode-muscles" onclick="setExMode('muscles')" class="py-2 px-1 rounded-lg bg-slate-900 text-white text-center">💪 Muscle Bank</button>
+          <button id="exMode-splits" onclick="setExMode('splits')" class="py-2 px-1 rounded-lg text-slate-600 text-center">📅 Workout Splits</button>
+          <button id="exMode-cardio" onclick="setExMode('cardio')" class="py-2 px-1 rounded-lg text-slate-600 text-center">🔥 Cardio / HIIT / Func</button>
+        </div>
+      </div>
+
+      <!-- SUB-VIEW 1: MUSCLE & EXERCISE MASTER BANK -->
+      <div id="view-muscles" class="space-y-3">
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-slate-700 uppercase">Filter by Muscle Group:</span>
+            <button onclick="addMuscleExercise()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl">+ Add Exercise</button>
+          </div>
+          <div id="muscleFilterPills" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
+        </div>
+        <div id="muscleExerciseList" class="space-y-2.5"></div>
+      </div>
+
+      <!-- SUB-VIEW 2: WORKOUT SPLITS (FULL BODY, UPPER/LOWER, PPL + ADD) -->
+      <div id="view-splits" class="hidden space-y-3">
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-slate-700 uppercase">Choose Workout Split:</span>
+            <button onclick="addNewSplit()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl">+ Add Split</button>
+          </div>
+          <div id="splitFilterPills" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
+        </div>
+        <div id="splitDetailCard" class="space-y-3"></div>
+      </div>
+
+      <!-- SUB-VIEW 3: CARDIO, HIIT & FUNCTIONAL STRENGTH -->
+      <div id="view-cardio" class="hidden space-y-3">
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-slate-700 uppercase">Cardio, HIIT & Functional Category:</span>
+            <button onclick="addCardioExercise()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl">+ Add Exercise</button>
+          </div>
+          <div id="cardioFilterPills" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1"></div>
+        </div>
+        <div id="cardioExerciseList" class="space-y-2.5"></div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: CLIENT DATA, MEASUREMENTS & FITNESS TESTING ==================== -->
+    <section id="tab-clientData" class="tab-section hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 class="text-base font-extrabold text-slate-900">Client Assessment, Measurements & Fitness Testing</h2>
+          <p class="text-xs text-slate-500">Complete interview, wellness, anthropometry & physical testing profile</p>
+        </div>
+        <div class="flex gap-2 no-print">
+          <button onclick="shareClientReport()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">📲 Send Report</button>
+          <button onclick="window.print()" class="bg-slate-100 text-slate-800 text-xs font-bold px-3 py-2 rounded-xl">🖨️ Save PDF</button>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">Body Measurements & Macros</h3>
+          <button onclick="addCustomField('measurements')" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg no-print">+ Add Measurement</button>
+        </div>
+        <div id="measurementsFields" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5"></div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">1. Client Interview — Personal & Medical</h3>
+          <button onclick="addCustomField('interview')" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg no-print">+ Add Field</button>
+        </div>
+        <div id="interviewFields" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">2. Training Preference, Goals & Wellness</h3>
+          <button onclick="addCustomField('wellness')" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg no-print">+ Add Field</button>
+        </div>
+        <div id="wellnessFields" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-emerald-700">3. Fitness Testing & Body Composition</h3>
+          <button onclick="addCustomField('testing')" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg no-print">+ Add Test</button>
+        </div>
+        <div id="testingFields" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: NUTRITION & DIET STUDIO ==================== -->
+    <section id="tab-nutrition" class="tab-section hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-extrabold">Indian Meal & Macro Planner</h2>
+            <p class="text-xs text-slate-500">Customized diet charts & meal timings</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="addDietPlan()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">+ Add Diet Plan</button>
+            <button onclick="shareDietWhatsApp()" class="bg-slate-900 text-white text-xs font-bold px-3 py-2 rounded-xl">📲 Send Diet</button>
+          </div>
+        </div>
+        <div id="dietList" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: GOALS & THEORY NOTEBOOK ==================== -->
+    <section id="tab-goalsTheory" class="tab-section hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-extrabold">Training Goals & Protocols</h2>
+            <p class="text-xs text-slate-500">Fat loss, muscle gain, hypertrophy, cardio, strength, functional + custom goals</p>
+          </div>
+          <button onclick="addGoal()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">+ Add Goal</button>
+        </div>
+        <div id="goalsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-extrabold">Muscle Anatomy & Kinesiology Notebook</h2>
+            <p class="text-xs text-slate-500">Origin, insertion, joint action & biomechanics cues</p>
+          </div>
+          <button onclick="addTheoryNote()" class="bg-slate-900 text-white text-xs font-bold px-3 py-2 rounded-xl">+ Add Note</button>
+        </div>
+        <div id="theoryList" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 5: VIDEOS & PHOTOS ==================== -->
+    <section id="tab-media" class="tab-section hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 class="text-base font-extrabold">Exercise Demo Videos & Form Photos</h2>
+            <p class="text-xs text-slate-500">Separate Gym & Home reference videos and photos</p>
+          </div>
+          <label class="bg-emerald-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl cursor-pointer">
+            + Add Video / Photo
+            <input type="file" accept="video/*,image/*" onchange="handleMediaUpload(event)" class="hidden" />
+          </label>
+        </div>
+        <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-extrabold">
+          <button id="mediaSub-gym" onclick="setMediaLocation('gym')" class="flex-1 py-2 rounded-lg bg-slate-900 text-white">🏋️ Gym Videos & Photos</button>
+          <button id="mediaSub-home" onclick="setMediaLocation('home')" class="flex-1 py-2 rounded-lg text-slate-600">🏠 Home Videos & Photos</button>
+        </div>
+      </div>
+      <div id="mediaGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+    </section>
+
+    <!-- ==================== TAB 6: ONLINE & OFFLINE HOME PT ==================== -->
+    <section id="tab-trainingMode" class="tab-section hidden space-y-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 class="text-base font-extrabold">Online & Offline Home Personal Training</h2>
+            <p class="text-xs text-slate-500">Chandigarh Tricity home PT, online coaching & specialized modules</p>
+          </div>
+          <button onclick="addCoachingPlan()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">+ Add Plan / Slot</button>
+        </div>
+        <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-extrabold">
+          <button id="coachSub-online" onclick="setCoachingType('online')" class="flex-1 py-2 rounded-lg bg-slate-900 text-white">💻 Online Training</button>
+          <button id="coachSub-offline" onclick="setCoachingType('offline')" class="flex-1 py-2 rounded-lg text-slate-600">🏡 Offline Home Training</button>
+        </div>
+      </div>
+      <div id="coachingList" class="space-y-3"></div>
+    </section>
+
+  </main>
+
+  <script>
+    const prevData = JSON.parse(localStorage.getItem('fitcoach_pro_v6') || localStorage.getItem('fitcoach_pro_v5') || 'null');
+
+    const defaultClientTemplate = (name, phone = '') => ({
+      id: Date.now() + Math.random(),
+      name: name,
+      phone: phone,
+      measurements: [
+        { label: 'Target Calories (kcal)', value: '1850' },
+        { label: 'Target Protein (g)', value: '140' },
+        { label: 'Weight (kg)', value: '75.5' },
+        { label: 'Body Fat (%)', value: '22.4' },
+        { label: 'Chest (inches)', value: '40.0' },
+        { label: 'Waist (inches)', value: '33.5' },
+        { label: 'Arms (inches)', value: '14.5' },
+        { label: 'Resting HR (bpm)', value: '68' }
+      ],
+      interview: [
+        { label: 'Client Name & Location', value: name },
+        { label: 'Client Medical History', value: 'None' },
+        { label: 'Medication', value: 'None' },
+        { label: 'PAR-Q Summary / Result', value: 'Cleared' },
+        { label: 'Exercise Contraindication', value: 'None' },
+        { label: 'Occupation', value: '' },
+        { label: 'Physical Activity Level (Low/Medium/High)', value: 'Medium' },
+        { label: 'Lifestyle', value: 'Active' },
+        { label: 'Meals on Time (Yes/No)', value: 'Yes' },
+        { label: 'Smoking (Occasionally/Yes/No)', value: 'No' },
+        { label: 'Alcohol (Occasionally/Yes/No)', value: 'No' }
+      ],
+      wellness: [
+        { label: 'Training Time of the Day', value: '6:00 AM' },
+        { label: 'Training Days', value: 'Mon - Sat' },
+        { label: 'Frequency per Week — Cardio', value: '3 Days' },
+        { label: 'Frequency per Week — Weight Training', value: '4 Days' },
+        { label: 'Average Screen Time (Work + Leisure)', value: '5 hrs' },
+        { label: 'Time Spent Sitting Each Day', value: '6 hrs' },
+        { label: 'Short-Term Goal', value: 'Fat loss & stamina' },
+        { label: 'Medium-Term Goal', value: 'Lean muscle gain' },
+        { label: 'Long-Term Goal', value: 'Sustainable fitness' },
+        { label: 'What Motivates You to Exercise?', value: 'Health & energy' },
+        { label: 'Confidence in Following a Fitness Plan (1–10)', value: '8/10' },
+        { label: 'Barriers to Achieving Goals', value: 'Work schedule' },
+        { label: 'Stress Level (Low/Medium/High)', value: 'Medium' },
+        { label: 'Does Exercise Help Mental Health? (Yes/No)', value: 'Yes' },
+        { label: 'Stress Management Techniques', value: 'Walking & deep breathing' },
+        { label: 'Initial Assessment Date', value: '2026-11-25' },
+        { label: 'Next Scheduled Check-In Date', value: '2026-12-25' }
+      ],
+      testing: [
+        { label: 'Digital Blood Pressure (Manual/Digital)', value: '120/80 mmHg' },
+        { label: 'Anthropometric Data — BMI (Body Mass Index)', value: '24.8' },
+        { label: 'Anthropometric Data — Waist Circumference', value: '33.5 in' },
+        { label: 'Anthropometric Data — WHR (Waist to Hip Ratio)', value: '0.86' },
+        { label: 'Body Composition — BIA (Bio-electrical Impedance)', value: '22.4%' },
+        { label: 'Cardiorespiratory Fitness — YMCA 3 Minutes Step Test', value: 'Good' },
+        { label: 'Muscular Endurance — Push-ups / Press-ups', value: '22 reps' },
+        { label: 'Muscular Endurance — Curl-up / Sit-ups', value: '28 reps' },
+        { label: 'Flexibility (Visual Assessment) — Quadriceps', value: 'Normal' },
+        { label: 'Flexibility (Visual Assessment) — Hamstrings', value: 'Slightly Tight' },
+        { label: 'Flexibility (Visual Assessment) — Hip Flexors', value: 'Normal' },
+        { label: 'Date of Fitness Testing', value: '2026-11-25' },
+        { label: 'Scheduled Date for Next Test', value: '2027-01-10' }
+      ]
+    });
+
+    // MASTER MUSCLE & EXERCISE LIBRARY FROM SCREENSHOT 1
+    const defaultMuscleBank = [
+      { id: 'm1', muscle: 'Chest', sub: 'Clavicular Head (Upper) — Shoulder flexion / horizontal adduction', name: 'Incline Chest Press / Scoop / Low-to-High Cable Fly (30°–65°)', sets: '4', reps: '10-12', rest: '90s' },
+      { id: 'm2', muscle: 'Chest', sub: 'Sternocostal Head (Mid) — Horizontal adduction & internal rotation', name: 'Flat Bench Press / Pec Deck Fly', sets: '4', reps: '8-12', rest: '90s' },
+      { id: 'm3', muscle: 'Chest', sub: 'Abdominal Head (Lower) & Pectoralis Minor', name: 'Decline Chest Press / High-to-Low Cable Crossover (-15°)', sets: '3', reps: '12-15', rest: '75s' },
+      { id: 'm4', muscle: 'Shoulders', sub: 'Anterior / Front Deltoid & Rotator Cuff (SITS)', name: 'Overhead Press Machine / Smith Machine Overhead Press', sets: '4', reps: '8-12', rest: '90s' },
+      { id: 'm5', muscle: 'Shoulders', sub: 'Lateral Deltoid — Shoulder abduction', name: 'Cable Lateral Raise / Dumbbell Lateral Raise', sets: '4', reps: '12-15', rest: '60s' },
+      { id: 'm6', muscle: 'Shoulders', sub: 'Posterior / Rear Deltoid — Horizontal abduction & external rotation', name: 'Reverse Pec Deck Fly / Prone High Row Dumbbell', sets: '3', reps: '12-15', rest: '60s' },
+      { id: 'm7', muscle: 'Biceps', sub: 'Biceps Brachii (Long & Short Head) — Supinated grip', name: 'Bayesian Curl / Preacher Curl / Incline DB Curl (20°–80°)', sets: '3', reps: '10-12', rest: '60s' },
+      { id: 'm8', muscle: 'Biceps', sub: 'Brachialis — Semi-pronated / neutral grip', name: 'Hammer Curl / Cross-Body Hammer Curl', sets: '3', reps: '12', rest: '60s' },
+      { id: 'm9', muscle: 'Biceps', sub: 'Brachioradialis — Pronated / neutral grip (80°–120°)', name: 'Reverse EZ-Bar / Cable Curl', sets: '3', reps: '12-15', rest: '60s' },
+      { id: 'm10', muscle: 'Triceps', sub: 'Long Head — Shoulder extension & elbow extension', name: 'Standing Cable Extension Unilateral / 60° Incline Bench Extension', sets: '3', reps: '10-12', rest: '60s' },
+      { id: 'm11', muscle: 'Triceps', sub: 'Medial Head — Elbow extension', name: 'Overhead Triceps Extension / Skull Crusher', sets: '3', reps: '12', rest: '60s' },
+      { id: 'm12', muscle: 'Triceps', sub: 'Lateral Head — Elbow extension', name: 'JM Press / Parallel Bar Dips / Triceps Rope Pushdown', sets: '3', reps: '10-15', rest: '60s' },
+      { id: 'm13', muscle: 'Forearms', sub: 'Wrist Flexors, Extensors & Grip Strength', name: 'Pinch Hold / Hand Gripper / Farmer\'s Walks / Wrist Curls', sets: '3', reps: '30-45s', rest: '60s' },
+      { id: 'm14', muscle: 'Back & Traps', sub: 'Erector Spinae (Iliocostalis, Longissimus, Spinalis)', name: 'Good Morning / Back Extension / Deadlift / Prone Side Lateral', sets: '4', reps: '8-10', rest: '120s' },
+      { id: 'm15', muscle: 'Back & Traps', sub: 'Upper Trapezius & Levator Scapulae — Scapular elevation', name: 'Barbell Shrugs / Smith Machine Shrugs / Dumbbell Shrugs', sets: '3', reps: '12-15', rest: '60s' },
+      { id: 'm16', muscle: 'Back & Traps', sub: 'Middle & Lower Trapezius, Rhomboids Major & Minor', name: 'Prone Shrug / Chest-Supported Row Machine (30–45°) / Reverse Shrug Pulldown', sets: '4', reps: '10-12', rest: '90s' },
+      { id: 'm17', muscle: 'Back & Lats', sub: 'Latissimus Dorsi & Teres Major — Shoulder extension & adduction', name: 'Wide-Grip Lat Pulldown / Pull-Up / 1-Arm Pulldown / Seated Row / Chin-Up', sets: '4', reps: '8-12', rest: '90s' },
+      { id: 'm18', muscle: 'Abs & Core', sub: 'Rectus Abdominis — Trunk / spine flexion', name: 'Crunch / Reverse Crunch / Cable Crunch', sets: '3', reps: '15-20', rest: '45s' },
+      { id: 'm19', muscle: 'Abs & Core', sub: 'External & Internal Obliques — Trunk rotation & lateral flexion', name: 'Twisting Crunch (Opposite & Same Side) / Side Bends / Woodchoppers', sets: '3', reps: '15 each', rest: '45s' },
+      { id: 'm20', muscle: 'Abs & Core', sub: 'Transverse Abdominis & Iliopsoas / Quadratus Lumborum', name: 'Unsupported Plank / Side Plank / Leg Raises / Sit-Ups', sets: '3', reps: '45-60s', rest: '45s' },
+      { id: 'm21', muscle: 'Quadriceps', sub: 'Rectus Femoris (Bi-articular) — Knee extension & hip flexion', name: 'Leg Extension (Full Range)', sets: '3', reps: '12-15', rest: '60s' },
+      { id: 'm22', muscle: 'Quadriceps', sub: 'Vastus Lateralis, Medialis & Intermedius (Uni-articular)', name: 'Barbell Back Squat / Lunges / Leg Press / Pendulum Squat', sets: '4', reps: '8-12', rest: '120s' },
+      { id: 'm23', muscle: 'Hamstrings', sub: 'Biceps Femoris, Semitendinosus & Semimembranosus', name: 'Seated Leg Curl / Prone Lying Leg Curl / RDL / Stiff-Leg Deadlift', sets: '4', reps: '10-12', rest: '90s' },
+      { id: 'm24', muscle: 'Glutes', sub: 'Gluteus Maximus — Hip extension & external rotation', name: 'Barbell Hip Thrust / Cable Kickback / Glute Bridge', sets: '4', reps: '10-12', rest: '90s' },
+      { id: 'm25', muscle: 'Glutes', sub: 'Gluteus Medius, Minimus & Sartorius — Hip abduction & stability', name: 'Lateral Hip Stabilizer / Step-Up / Static Lunges / 45° Abduction', sets: '3', reps: '12-15', rest: '60s' },
+      { id: 'm26', muscle: 'Adductors & Calves', sub: 'Adductor Magnus, Longus, Brevis, Pectineus & Gracilis', name: 'Hip Adduction Machine & Cable / Sumo Squat / Lunges', sets: '3', reps: '12-15', rest: '60s' },
+      { id: 'm27', muscle: 'Adductors & Calves', sub: 'Gastrocnemius, Soleus & Tibialis Anterior', name: 'Seated Calf Raise / Leg Press Calf Raise / Standing Calf / Cable Toe Raises', sets: '4', reps: '15-20', rest: '45s' }
+    ];
+
+    // WORKOUT SPLITS (FULL BODY, UPPER/LOWER, PPL)
+    const defaultSplits = [
+      {
+        name: 'Full Body Split',
+        schedule: '3 Days / Week (Mon, Wed, Fri)',
+        notes: 'Ideal for beginners, fat loss, and busy schedules. Focus on compound lifts.',
+        exercises: [
+          { name: 'Barbell Back Squat / Leg Press', muscle: 'Quadriceps & Glutes', sets: '4', reps: '8-10', rest: '120s' },
+          { name: 'Flat Bench Press / Incline DB Press', muscle: 'Chest & Anterior Deltoid', sets: '4', reps: '8-12', rest: '90s' },
+          { name: 'Wide-Grip Lat Pulldown / Seated Row', muscle: 'Lats & Upper Back', sets: '4', reps: '10-12', rest: '90s' },
+          { name: 'Romanian Deadlift (RDL)', muscle: 'Hamstrings & Erector Spinae', sets: '3', reps: '10-12', rest: '90s' },
+          { name: 'Cable Lateral Raise + Plank Superset', muscle: 'Side Delts & Core', sets: '3', reps: '15 + 45s', rest: '60s' }
+        ]
+      },
+      {
+        name: 'Upper / Lower Split',
+        schedule: '4 Days / Week (Mon, Tue, Thu, Fri)',
+        notes: 'Balanced hypertrophy and strength split hitting every muscle twice a week.',
+        exercises: [
+          { name: 'Upper Day: Incline Chest Press (30°–45°)', muscle: 'Upper Chest', sets: '4', reps: '8-12', rest: '90s' },
+          { name: 'Upper Day: Chest-Supported DB Row', muscle: 'Mid-Back & Rhomboids', sets: '4', reps: '10-12', rest: '90s' },
+          { name: 'Upper Day: Overhead Press + Lateral Raise', muscle: 'Shoulders', sets: '3', reps: '10-12', rest: '75s' },
+          { name: 'Upper Day: Bayesian Bicep Curl + Triceps Pushdown', muscle: 'Arms', sets: '3', reps: '12-15', rest: '60s' },
+          { name: 'Lower Day: Squat + RDL + Leg Curl + Standing Calf', muscle: 'Quads, Hams, Glutes & Calves', sets: '4', reps: '10-12', rest: '90s' }
+        ]
+      },
+      {
+        name: 'Push / Pull / Legs (PPL)',
+        schedule: '6 Days / Week (Mon–Sat)',
+        notes: 'High-volume hypertrophy split for intermediate & advanced clients.',
+        exercises: [
+          { name: 'PUSH: Flat Bench + Incline DB Press + Cable Fly', muscle: 'Chest (All Heads)', sets: '4', reps: '8-12', rest: '90s' },
+          { name: 'PUSH: Overhead Press + Cable Lateral Raise + Triceps Extension', muscle: 'Shoulders & Triceps', sets: '3', reps: '12-15', rest: '60s' },
+          { name: 'PULL: Wide-Grip Pulldown + Seated Row + Reverse Pec Deck', muscle: 'Lats, Traps & Rear Delts', sets: '4', reps: '10-12', rest: '90s' },
+          { name: 'PULL: Incline DB Curl + Hammer Curl + Shrugs', muscle: 'Biceps, Brachialis & Traps', sets: '3', reps: '12-15', rest: '60s' },
+          { name: 'LEGS: Back Squat + Leg Extension + Seated Leg Curl + Hip Thrust + Calf Raise', muscle: 'Complete Lower Body', sets: '4', reps: '10-15', rest: '90s' }
+        ]
+      }
+    ];
+
+    // CARDIO, HIIT & FUNCTIONAL STRENGTH FROM SCREENSHOT 2
+    const defaultCardioBank = [
+      { id: 'c1', category: 'Cardio', sub: 'Karvonen HR Zone: ((220 - Age - RHR) × %) + RHR', name: 'Weight-Bearing Impact Cardio (Treadmill Incline Walk / Jogging)', sets: '1', reps: '25–35 mins', rest: 'Zone 2 (60–70% HR)' },
+      { id: 'c2', category: 'Cardio', sub: 'Non-Impact / Joint-Friendly Endurance', name: 'Stationary Cycling / Elliptical Cross-Trainer / Rowing Machine', sets: '1', reps: '20–30 mins', rest: 'Moderate Pace' },
+      { id: 'c3', category: 'HIIT', sub: 'Work-to-Rest Ratios: 1:1 (30s:30s), 1:2 (20s:40s), Tabata (20s:10s)', name: 'Tabata Protocol — 8 Rounds (20s All-Out Effort / 10s Rest)', sets: '8 Rounds', reps: '20s Work', rest: '10s Rest' },
+      { id: 'c4', category: 'HIIT', sub: 'Full Body Metabolic Conditioning Circuit', name: 'Burpees + Mountain Climbers + Jump Squats + High Knees', sets: '4 Rounds', reps: '30s each', rest: '30s between rounds' },
+      { id: 'c5', category: 'Kettlebell', sub: 'Posterior Chain Power & Conditioning', name: '1-Arm & Double-Arm Kettlebell Swing / Clean & Press / Goblet Squat / Turkish Get-Up', sets: '4', reps: '15-20', rest: '60s' },
+      { id: 'c6', category: 'Bodyweight', sub: 'Core Stability, Upper Push & Dynamic Conditioning', name: 'Military Push-Up / Climber Push-Up / Plank Shoulder Taps / Jumping Jacks / Russian Twist', sets: '3', reps: '15-20 / 40s', rest: '45s' },
+      { id: 'c7', category: 'Battle Rope & TRX', sub: 'Upper Body Power & Suspension Core Stability', name: 'Battle Rope Alternating Waves / Double Slam + TRX Atomic Push-Up & Row', sets: '4', reps: '30s work', rest: '30s rest' },
+      { id: 'c8', category: 'Agility & Sandbag', sub: 'Speed, Footwork & Odd-Object Functional Strength', name: 'Agility Ladder Drills / Cone Shuttle + Sandbag Squat, Lunge & Clean', sets: '4', reps: '12-15 / 30s', rest: '60s' }
+    ];
+
+    let appState = JSON.parse(localStorage.getItem('fitcoach_pro_v7')) || {
+      activeClientIdx: 0,
+      exMode: 'muscles',
+      selectedMuscleFilter: 'All',
+      selectedSplitIdx: 0,
+      selectedCardioFilter: 'All',
+      selectedIds: [],
+      mediaLocation: 'gym',
+      coachingType: 'online',
+      trialStart: (prevData && prevData.trialStart) ? prevData.trialStart : Date.now(),
+      isUnlocked: (prevData && prevData.isUnlocked) ? prevData.isUnlocked : false,
+      secretCode: (prevData && prevData.secretCode) ? prevData.secretCode : 'KAPILPRO',
+      coach: (prevData && prevData.coach) ? prevData.coach : {
+        photo: '',
+        name: 'Coach Kapil Dev',
+        title: 'Certified Personal Trainer (K11 APT-Pro Distinction)',
+        location: 'Service Area: Chandigarh, Mohali & Panchkula',
+        phone: '+91 7018456690',
+        credentials: [
+          { label: 'Certification 1', value: 'K11 Advanced Personal Trainer Pro (APT-Pro) — Distinction' },
+          { label: 'Certification 2', value: 'NSQF Level 4 — General Fitness Trainer (SPEFL-SC)' },
+          { label: 'Emergency & Safety', value: 'Trauma Response, CPR & AED Certified' },
+          { label: 'Experience', value: '3 Years Personal Trainer (Goodlife Fitness, Mumbai)' },
+          { label: 'Specialties', value: 'Fat Loss, Hypertrophy, Home PT & Biomechanics' }
+        ]
+      },
+      clients: (prevData && prevData.clients) ? prevData.clients : [
+        defaultClientTemplate('Rahul Sharma (Sector 17)', ''),
+        defaultClientTemplate('Client B — Mohali', '')
+      ],
+      muscleBank: defaultMuscleBank,
+      splits: defaultSplits,
+      cardioBank: defaultCardioBank,
+      media: {
+        gym: [{ title: 'Gym Setup — Barbell & Dumbbell Form Reference', type: 'note', desc: 'Tap "+ Add Video / Photo" above to attach gallery clips for Gym exercises.' }],
+        home: [{ title: 'Home Setup — Bodyweight & Resistance Band Form', type: 'note', desc: 'Tap "+ Add Video / Photo" above to attach gallery clips for Home workouts.' }]
+      },
+      goals: (prevData && prevData.goals) ? prevData.goals : [
+        { title: 'Fat Loss', details: 'Calorie deficit (300–500 kcal), 1.6–2g/kg protein, resistance training + daily step target.' },
+        { title: 'Muscle Gain', details: 'Lean calorie surplus (+250 kcal), progressive overload on compound lifts, 7–8 hrs sleep.' },
+        { title: 'Hypertrophy', details: '8–15 rep range, controlled eccentric tempo, 10–20 weekly working sets per muscle group.' },
+        { title: 'Cardio & HIIT', details: 'Karvonen Zone-2 steady state (30–40 min) + Tabata/HIIT intervals to boost VO2 max.' },
+        { title: 'Strength Training', details: 'Low reps (3–6), heavy compound movements (Squat, Deadlift, Press, Row) with 2–3 min rest.' },
+        { title: 'Functional Training', details: 'Kettlebell, TRX suspension, battle ropes, agility ladder & multi-planar core stability.' }
+      ],
+      theory: (prevData && prevData.theory) ? prevData.theory : [
+        { title: 'Chest & Incline Angles', body: 'Clavicular head: 30°–65° incline; Sternocostal: flat bench/pec deck; Abdominal head: -15° decline.' },
+        { title: 'Biceps Grip & Angle Rule', body: 'Supinated grip (20°–80°) targets Biceps Brachii; Neutral grip targets Brachialis; Pronated grip (80°–120°) targets Brachioradialis.' },
+        { title: 'Karvonen Heart Rate Formula', body: 'Target HR = ((220 - Age - Resting HR) × Training Intensity %) + Resting HR.' }
+      ],
+      diets: (prevData && prevData.diets) ? prevData.diets : [
+        {
+          title: 'Standard Indian Fat Loss / Muscle Gain Plan (1850 kcal)',
+          plan: 'Pre-Workout (6:00 AM): 4 Almonds, 1 Walnut, Chia Seeds + Green Tea\nIntra-Workout: 1 Scoop Creatine Monohydrate + Water\nBreakfast (8:30 AM): 4 Egg Whites + 2 Whole Eggs / Paneer Bhurji + 2 Multigrain Rotis\nLunch (1:30 PM): 120g Chicken Breast / Soya Chunks + Dal + Sabzi + Salad\nEvening Snack (5:30 PM): Roasted Makhana / Whey Protein Scoop\nDinner (8:30 PM): Grilled Paneer / Tofu + Stir-fry Veggies + 1 Roti'
+        }
+      ],
+      coaching: (prevData && prevData.coaching) ? prevData.coaching : {
+        online: [
+          { title: 'Online 1-on-1 Coaching (Monthly)', schedule: 'Weekly Video Check-In + Custom Diet & Workout App Access', fee: '₹3,500 / month', notes: 'Form check via WhatsApp videos, weekly macro adjustments & 24/7 chat support.' },
+          { title: 'Live Zoom / Video Call Personal Training', schedule: 'Mon / Wed / Fri — 7:00 AM or 6:00 PM', fee: '₹5,500 / month', notes: 'Real-time posture correction and guided 45-min home workout session.' }
+        ],
+        offline: [
+          { title: 'Chandigarh Tricity Home PT (12 Sessions)', schedule: 'Sector 17, Mohali, Panchkula — Morning / Evening Slots', fee: '₹8,000 / month', notes: 'Doorstep 1-on-1 personal training with portable equipment & body composition tracking.' },
+          { title: '12-Week Fat Loss & Core Conditioning (Home / Society Gym)', schedule: '5 Days/Week — 60 Mins Session', fee: '₹12,000 / month', notes: 'Resistance training + progressive NEAT, fitness testing & custom Indian diet chart.' }
+        ]
+      }
+    };
+
+    function saveState() {
+      localStorage.setItem('fitcoach_pro_v7', JSON.stringify(appState));
+      document.getElementById('saveBadge').textContent = '✓ Saved';
+    }
+
+    function sendToClientWhatsApp(message) {
+      const c = appState.clients[appState.activeClientIdx];
+      let rawPhone = (c.phone || '').replace(/\D/g, '');
+      if (rawPhone.length === 10) rawPhone = '91' + rawPhone;
+      const url = rawPhone.length >= 11
+        ? `https://wa.me/${rawPhone}?text=${encodeURIComponent(message)}`
+        : `https://wa.me/?text=${encodeURIComponent(message)}`;
+      window.location.href = url;
+    }
+
+    function updateClientPhone(val) {
+      appState.clients[appState.activeClientIdx].phone = val;
+      saveState();
+    }
+
+    // CHECKBOX SELECTION LOGIC
+    function toggleSelectItem(id) {
+      const idx = appState.selectedIds.indexOf(id);
+      if (idx > -1) appState.selectedIds.splice(idx, 1);
+      else appState.selectedIds.push(id);
+      saveState();
+      updateSelectedBadges();
+    }
+
+    function clearSelectedExercises() {
+      appState.selectedIds = [];
+      saveState();
+      renderExercisesSection();
+    }
+
+    function updateSelectedBadges() {
+      const count = appState.selectedIds.length;
+      document.getElementById('selectedCountBadge').textContent = count;
+      document.getElementById('selectedCountTop').textContent = count;
+    }
+
+    function sendSelectedExercisesWhatsApp() {
+      const c = appState.clients[appState.activeClientIdx];
+      const allItems = [
+        ...appState.muscleBank.map(x => ({ id: x.id, label: x.muscle, name: x.name, sets: x.sets, reps: x.reps, rest: x.rest })),
+        ...appState.cardioBank.map(x => ({ id: x.id, label: x.category, name: x.name, sets: x.sets, reps: x.reps, rest: x.rest }))
+      ];
+      const chosen = allItems.filter(item => appState.selectedIds.includes(item.id));
+      if (chosen.length === 0) {
+        alert('Pehle kam se kam 1 exercise ke aage checkbox (☑️) tick karein!');
+        return;
+      }
+      const lines = chosen.map((e, i) => `${i + 1}. *${e.name}* [${e.label}]\n    Sets: ${e.sets} | Reps/Time: ${e.reps} | Rest: ${e.rest}`).join('\n');
+      const msg = `🏋️ *TODAY'S PERSONALIZED WORKOUT*\nClient: ${c.name}\nCoach: ${appState.coach.name}\n\n*Exercises to Perform Today:*\n${lines}\n\n✅ Complete all sets with controlled form and send your workout update!`;
+      sendToClientWhatsApp(msg);
+    }
+
+    function sendFullSplitWhatsApp(splitIdx) {
+      const c = appState.clients[appState.activeClientIdx];
+      const sp = appState.splits[splitIdx];
+      const lines = sp.exercises.map((e, i) => `${i + 1}. *${e.name}* (${e.muscle})\n    Sets: ${e.sets} | Reps: ${e.reps} | Rest: ${e.rest}`).join('\n');
+      const msg = `📅 *WORKOUT SPLIT: ${sp.name.toUpperCase()}*\nSchedule: ${sp.schedule}\nClient: ${c.name} | Coach: ${appState.coach.name}\n\n${lines}\n\n📝 Note: ${sp.notes}`;
+      sendToClientWhatsApp(msg);
+    }
+
+    // EX MODE & RENDERS
+    function setExMode(mode) {
+      appState.exMode = mode;
+      ['muscles', 'splits', 'cardio'].forEach(m => {
+        document.getElementById('exMode-' + m).className = m === mode
+          ? 'py-2 px-1 rounded-lg bg-slate-900 text-white text-center'
+          : 'py-2 px-1 rounded-lg text-slate-600 text-center';
+        document.getElementById('view-' + m).classList.toggle('hidden', m !== mode);
+      });
+      saveState();
+      renderExercisesSection();
+    }
+
+    function renderExercisesSection() {
+      updateSelectedBadges();
+      // 1. Muscle Bank
+      const muscles = ['All', ...new Set(appState.muscleBank.map(m => m.muscle))];
+      document.getElementById('muscleFilterPills').innerHTML = muscles.map(m => `
+        <button onclick="appState.selectedMuscleFilter='${m}';renderExercisesSection()" class="px-3 py-1 rounded-xl text-xs font-bold shrink-0 border ${appState.selectedMuscleFilter === m ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-slate-50 text-slate-700 border-slate-200'}">${m}</button>
+      `).join('');
+
+      const filteredMuscles = appState.selectedMuscleFilter === 'All'
+        ? appState.muscleBank
+        : appState.muscleBank.filter(m => m.muscle === appState.selectedMuscleFilter);
+
+      document.getElementById('muscleExerciseList').innerHTML = filteredMuscles.map(ex => {
+        const realIdx = appState.muscleBank.findIndex(x => x.id === ex.id);
+        const checked = appState.selectedIds.includes(ex.id) ? 'checked' : '';
+        return `
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200 space-y-2">
+            <div class="flex items-start gap-2.5">
+              <input type="checkbox" ${checked} onchange="toggleSelectItem('${ex.id}')" class="w-5 h-5 mt-0.5 accent-emerald-600 rounded cursor-pointer shrink-0" />
+              <div class="flex-1">
+                <span class="text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded">${ex.muscle}</span>
+                <input value="${ex.name}" onchange="appState.muscleBank[${realIdx}].name=this.value;saveState()" class="font-extrabold text-xs text-slate-900 w-full bg-transparent focus:outline-none mt-1" />
+                <input value="${ex.sub}" onchange="appState.muscleBank[${realIdx}].sub=this.value;saveState()" class="text-[11px] text-slate-500 w-full bg-transparent focus:outline-none" />
+              </div>
+              <button onclick="appState.muscleBank.splice(${realIdx},1);saveState();renderExercisesSection()" class="text-xs text-rose-500 font-bold">✕</button>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-xs pl-7">
+              <div class="bg-slate-50 p-1.5 rounded-lg border"><span class="text-[9px] text-slate-400 block font-bold">SETS</span><input value="${ex.sets}" onchange="appState.muscleBank[${realIdx}].sets=this.value;saveState()" class="font-bold w-full bg-transparent" /></div>
+              <div class="bg-slate-50 p-1.5 rounded-lg border"><span class="text-[9px] text-slate-400 block font-bold">REPS</span><input value="${ex.reps}" onchange="appState.muscleBank[${realIdx}].reps=this.value;saveState()" class="font-bold w-full bg-transparent" /></div>
+              <div class="bg-slate-50 p-1.5 rounded-lg border"><span class="text-[9px] text-slate-400 block font-bold">REST</span><input value="${ex.rest}" onchange="appState.muscleBank[${realIdx}].rest=this.value;saveState()" class="font-bold w-full bg-transparent" /></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 2. Splits
+      document.getElementById('splitFilterPills').innerHTML = appState.splits.map((s, i) => `
+        <button onclick="appState.selectedSplitIdx=${i};renderExercisesSection()" class="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 border ${appState.selectedSplitIdx === i ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-50 text-slate-700 border-slate-200'}">${s.name}</button>
+      `).join('');
+
+      const sp = appState.splits[appState.selectedSplitIdx] || appState.splits[0];
+      const spIdx = appState.selectedSplitIdx;
+      document.getElementById('splitDetailCard').innerHTML = `
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex-1">
+              <input value="${sp.name}" onchange="appState.splits[${spIdx}].name=this.value;saveState();renderExercisesSection()" class="font-extrabold text-sm text-slate-900 bg-transparent w-full" />
+              <input value="${sp.schedule}" onchange="appState.splits[${spIdx}].schedule=this.value;saveState()" class="text-xs font-semibold text-emerald-700 bg-transparent w-full" />
+            </div>
+            <div class="flex gap-1.5">
+              <button onclick="addExerciseToSplit(${spIdx})" class="bg-slate-100 text-slate-800 text-xs font-bold px-2.5 py-1.5 rounded-xl">+ Add Exercise</button>
+              <button onclick="sendFullSplitWhatsApp(${spIdx})" class="bg-emerald-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-xl">📲 Send Split</button>
+            </div>
+          </div>
+          <input value="${sp.notes}" onchange="appState.splits[${spIdx}].notes=this.value;saveState()" class="w-full text-xs bg-slate-50 p-2 rounded-xl border text-slate-600" />
+          <div class="space-y-2">
+            ${sp.exercises.map((ex, ei) => `
+              <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+                <div class="flex justify-between items-center gap-2">
+                  <input value="${ex.name}" onchange="appState.splits[${spIdx}].exercises[${ei}].name=this.value;saveState()" class="font-extrabold text-xs text-slate-900 bg-transparent w-full" />
+                  <button onclick="appState.splits[${spIdx}].exercises.splice(${ei},1);saveState();renderExercisesSection()" class="text-xs text-rose-500 font-bold">✕</button>
+                </div>
+                <div class="grid grid-cols-4 gap-1.5 text-[11px]">
+                  <input value="${ex.muscle}" onchange="appState.splits[${spIdx}].exercises[${ei}].muscle=this.value;saveState()" class="bg-white p-1 rounded border font-semibold" />
+                  <input value="${ex.sets}" onchange="appState.splits[${spIdx}].exercises[${ei}].sets=this.value;saveState()" class="bg-white p-1 rounded border font-bold text-center" />
+                  <input value="${ex.reps}" onchange="appState.splits[${spIdx}].exercises[${ei}].reps=this.value;saveState()" class="bg-white p-1 rounded border font-bold text-center" />
+                  <input value="${ex.rest}" onchange="appState.splits[${spIdx}].exercises[${ei}].rest=this.value;saveState()" class="bg-white p-1 rounded border font-bold text-center" />
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // 3. Cardio / HIIT / Functional
+      const cats = ['All', ...new Set(appState.cardioBank.map(c => c.category))];
+      document.getElementById('cardioFilterPills').innerHTML = cats.map(c => `
+        <button onclick="appState.selectedCardioFilter='${c}';renderExercisesSection()" class="px-3 py-1 rounded-xl text-xs font-bold shrink-0 border ${appState.selectedCardioFilter === c ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-slate-50 text-slate-700 border-slate-200'}">${c}</button>
+      `).join('');
+
+      const filteredCardio = appState.selectedCardioFilter === 'All'
+        ? appState.cardioBank
+        : appState.cardioBank.filter(c => c.category === appState.selectedCardioFilter);
+
+      document.getElementById('cardioExerciseList').innerHTML = filteredCardio.map(ex => {
+        const realIdx = appState.cardioBank.findIndex(x => x.id === ex.id);
+        const checked = appState.selectedIds.includes(ex.id) ? 'checked' : '';
+        return `
+          <div class="bg-white p-3.5 rounded-2xl border border-slate-200 space-y-2">
+            <div class="flex items-start gap-2.5">
+              <input type="checkbox" ${checked} onchange="toggleSelectItem('${ex.id}')" class="w-5 h-5 mt-0.5 accent-emerald-600 rounded cursor-pointer shrink-0" />
+              <div class="flex-1">
+                <span class="text-[10px] font-extrabold uppercase bg-amber-100 text-amber-900 px-2 py-0.5 rounded">${ex.category}</span>
+                <input value="${ex.name}" onchange="appState.cardioBank[${realIdx}].name=this.value;saveState()" class="font-extrabold text-xs text-slate-900 w-full bg-transparent focus:outline-none mt-1" />
+                <input value="${ex.sub}" onchange="appState.cardioBank[${realIdx}].sub=this.value;saveState()" class="text-[11px] text-slate-500 w-full bg-transparent focus:outline-none" />
+              </div>
+              <button onclick="appState.cardioBank.splice(${realIdx},1);saveState();renderExercisesSection()" class="text-xs text-rose-500 font-bold">✕</button>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-xs pl-7">
+              <div class="bg-slate-50 p-1.5 rounded-lg border"><span class="text-[9px] text-slate-400 block font-bold">ROUNDS/SETS</span><input value="${ex.sets}" onchange="appState.cardioBank[${realIdx}].sets=this.value;saveState()" class="font-bold w-full bg-transparent" /></div>
+              <div class="bg-slate-50 p-1.5 rounded-lg border"><span class="text-[9px] text-slate-400 block font-bold">TIME/REPS</span><input value="${ex.reps}" onchange="appState.cardioBank[${realIdx}].reps=this.value;saveState()" class="font-bold w-full bg-transparent" /></div>
+              <div class="bg-slate-50 p-1.5 rounded-lg border"><span class="text-[9px] text-slate-400 block font-bold">REST/ZONE</span><input value="${ex.rest}" onchange="appState.cardioBank[${realIdx}].rest=this.value;saveState()" class="font-bold w-full bg-transparent" /></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addMuscleExercise() {
+      const muscle = prompt('Muscle Group (e.g. Chest, Back & Lats, Shoulders, Biceps, Triceps, Quadriceps, Glutes):', appState.selectedMuscleFilter === 'All' ? 'Chest' : appState.selectedMuscleFilter);
+      if (!muscle) return;
+      const name = prompt('Exercise Name:');
+      if (!name) return;
+      appState.muscleBank.unshift({ id: 'm_' + Date.now(), muscle: muscle.trim(), sub: 'Custom Exercise', name: name.trim(), sets: '3', reps: '10-12', rest: '60s' });
+      saveState();
+      renderExercisesSection();
+    }
+
+    function addNewSplit() {
+      const name = prompt('New Split Name (e.g. Bro Split, Fat Loss 5-Day, Home Body Split):');
+      if (!name) return;
+      appState.splits.push({
+        name: name.trim(),
+        schedule: 'Custom Schedule',
+        notes: 'Coach instructions...',
+        exercises: [{ name: 'Exercise 1', muscle: 'Target Muscle', sets: '3', reps: '12', rest: '60s' }]
+      });
+      appState.selectedSplitIdx = appState.splits.length - 1;
+      saveState();
+      renderExercisesSection();
+    }
+
+    function addExerciseToSplit(splitIdx) {
+      appState.splits[splitIdx].exercises.push({ name: 'New Exercise', muscle: 'Target Muscle', sets: '3', reps: '12', rest: '60s' });
+      saveState();
+      renderExercisesSection();
+    }
+
+    function addCardioExercise() {
+      const category = prompt('Category (Cardio, HIIT, Kettlebell, Bodyweight, Battle Rope & TRX, Agility & Sandbag):', appState.selectedCardioFilter === 'All' ? 'HIIT' : appState.selectedCardioFilter);
+      if (!category) return;
+      const name = prompt('Exercise / Protocol Name:');
+      if (!name) return;
+      appState.cardioBank.unshift({ id: 'c_' + Date.now(), category: category.trim(), sub: 'Custom Conditioning', name: name.trim(), sets: '4 Rounds', reps: '30s', rest: '30s' });
+      saveState();
+      renderExercisesSection();
+    }
+
+    // 3-DAY FREE TRIAL & LOCK LOGIC
+    function checkTrialStatus() {
+      const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+      const elapsed = Date.now() - appState.trialStart;
+      const remainingMs = threeDaysMs - elapsed;
+      const banner = document.getElementById('trialBanner');
+      const statusText = document.getElementById('trialStatusText');
+
+      if (appState.isUnlocked) {
+        banner.classList.add('hidden');
+        document.getElementById('trialLockModal').classList.add('hidden');
+        return;
+      }
+
+      if (remainingMs > 0) {
+        const hrsLeft = Math.ceil(remainingMs / (1000 * 60 * 60));
+        const daysLeft = Math.ceil(hrsLeft / 24);
+        statusText.textContent = `🎁 3-Day Free Trial Active — ${daysLeft} Day(s) (${hrsLeft} hrs) Remaining!`;
+      } else {
+        statusText.textContent = `⚠️ 3-Day Free Trial Expired — Unlock Full Access Now`;
+        document.getElementById('trialLockModal').classList.remove('hidden');
+      }
+    }
+
+    function requestUnlockWhatsApp() {
+      const msg = `Hi Coach Kapil Dev! I loved my 3-Day Free Trial on *FitCoach Pro* and want to join your full coaching plan & get my App Unlock Code.`;
+      window.location.href = 'https://wa.me/917018456690?text=' + encodeURIComponent(msg);
+    }
+
+    function verifyUnlockCode() {
+      const input = document.getElementById('unlockCodeInput').value.trim().toUpperCase();
+      if (input === appState.secretCode.toUpperCase()) {
+        appState.isUnlocked = true;
+        saveState();
+        document.getElementById('trialLockModal').classList.add('hidden');
+        document.getElementById('trialBanner').classList.add('hidden');
+        alert('🎉 FitCoach Pro Unlocked!');
+      } else {
+        document.getElementById('unlockError').classList.remove('hidden');
+      }
+    }
+
+    function changeSecretCode() {
+      const code = prompt('Set New Client Unlock Code (e.g., KAPIL2026):', appState.secretCode);
+      if (!code) return;
+      appState.secretCode = code.trim().toUpperCase();
+      saveState();
+      document.getElementById('displaySecretCode').textContent = appState.secretCode;
+    }
+
+    function previewLockScreen() {
+      document.getElementById('trialLockModal').classList.remove('hidden');
+    }
+
+    function shareTrialInvite() {
+      const msg = `🎁 *Start Your 3-Day VIP Free Trial with Coach Kapil Dev!*\n\nGet:\n✅ Personal Fitness Assessment & Body Analysis\n✅ Custom Gym, Home & HIIT Workout Plan\n✅ Indian Meal & Macro Diet Guide\n\nOpen FitCoach Pro App Now:\nhttps://fitcoachpro-kapil.netlify.app`;
+      sendToClientWhatsApp(msg);
+    }
+
+    function toggleCoachProfile() {
+      document.getElementById('coachProfilePanel').classList.toggle('hidden');
+      document.getElementById('btnCoach').className = 'px-2.5 py-1 rounded-lg bg-emerald-500 text-slate-950';
+      document.getElementById('btnClient').className = 'px-2.5 py-1 rounded-lg text-slate-300';
+    }
+
+    function closeCoachProfile() {
+      document.getElementById('coachProfilePanel').classList.add('hidden');
+      document.getElementById('btnClient').className = 'px-2.5 py-1 rounded-lg bg-emerald-500 text-slate-950';
+      document.getElementById('btnCoach').className = 'px-2.5 py-1 rounded-lg text-slate-300';
+    }
+
+    function uploadCoachPhoto(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          canvas.width = 300;
+          canvas.height = 300;
+          const ctx = canvas.getContext('2d');
+          const minSide = Math.min(img.width, img.height);
+          ctx.drawImage(img, (img.width - minSide) / 2, (img.height - minSide) / 2, minSide, minSide, 0, 0, 300, 300);
+          appState.coach.photo = canvas.toDataURL('image/jpeg', 0.85);
+          saveState();
+          renderCoachProfile();
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateCoachInfo(field, val) {
+      appState.coach[field] = val;
+      saveState();
+    }
+
+    function addCoachCredential() {
+      const label = prompt('Enter Heading:');
+      if (!label) return;
+      appState.coach.credentials.push({ label, value: 'Enter details...' });
+      saveState();
+      renderCoachProfile();
+    }
+
+    function renderCoachProfile() {
+      const c = appState.coach;
+      document.getElementById('coachNameInput').value = c.name;
+      document.getElementById('coachTitleInput').value = c.title;
+      document.getElementById('coachLocationInput').value = c.location;
+      document.getElementById('coachPhoneInput').value = c.phone;
+      document.getElementById('displaySecretCode').textContent = appState.secretCode;
+
+      if (c.photo) {
+        document.getElementById('coachAvatarPreview').src = c.photo;
+        document.getElementById('coachAvatarPreview').classList.remove('hidden');
+        document.getElementById('coachAvatarPlaceholder').classList.add('hidden');
+        document.getElementById('headerCoachImg').src = c.photo;
+        document.getElementById('headerCoachImg').classList.remove('hidden');
+        document.getElementById('headerCoachBadge').classList.add('hidden');
+      }
+
+      document.getElementById('coachCredentialsList').innerHTML = c.credentials.map((item, i) => `
+        <div class="p-2.5 bg-slate-900/90 rounded-xl border border-slate-700 flex items-start justify-between gap-2">
+          <div class="flex-1">
+            <span class="text-[10px] font-bold text-emerald-400 block">${item.label}</span>
+            <input value="${item.value}" onchange="appState.coach.credentials[${i}].value=this.value;saveState()" class="w-full text-xs font-bold text-white bg-transparent focus:outline-none mt-0.5" />
+          </div>
+          <button onclick="appState.coach.credentials.splice(${i},1);saveState();renderCoachProfile()" class="text-[10px] text-rose-400 font-bold">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function shareCoachCard() {
+      const c = appState.coach;
+      const creds = c.credentials.map(x => `• ${x.value}`).join('\n');
+      const msg = `*${c.name}*\n${c.title}\n${c.location}\n📞 ${c.phone}\n\n*Credentials & Experience:*\n${creds}\n\n🎁 Start 3-Day Free Trial: https://fitcoachpro-kapil.netlify.app`;
+      sendToClientWhatsApp(msg);
+    }
+
+    function renderClientsBar() {
+      document.getElementById('clientPills').innerHTML = appState.clients.map((c, idx) => `
+        <button onclick="selectClient(${idx})" class="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 border ${idx === appState.activeClientIdx ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-slate-100 text-slate-700 border-slate-200'}">
+          👤 ${c.name}
+        </button>
+      `).join('');
+      const active = appState.clients[appState.activeClientIdx];
+      document.getElementById('activeClientPhone').value = active.phone || '';
+    }
+
+    function selectClient(idx) {
+      appState.activeClientIdx = idx;
+      saveState();
+      renderAll();
+    }
+
+    function addNewClient() {
+      const name = prompt('Enter New Client Name (e.g., Rohit — Mohali):');
+      if (!name) return;
+      const phone = prompt('Enter Client WhatsApp Number (10 digits):') || '';
+      appState.clients.push(defaultClientTemplate(name, phone));
+      appState.activeClientIdx = appState.clients.length - 1;
+      saveState();
+      renderAll();
+    }
+
+    function renderClientData() {
+      const client = appState.clients[appState.activeClientIdx];
+      ['measurements', 'interview', 'wellness', 'testing'].forEach(section => {
+        const el = document.getElementById(section + 'Fields');
+        el.innerHTML = client[section].map((item, i) => `
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-start justify-between gap-2">
+            <div class="flex-1">
+              <label class="text-[10px] font-bold text-slate-500 block">${item.label}</label>
+              <input value="${item.value}" onchange="updateClientField('${section}', ${i}, this.value)" class="w-full text-xs font-extrabold text-slate-900 bg-transparent focus:outline-none mt-0.5" />
+            </div>
+            <button onclick="deleteClientField('${section}', ${i})" class="text-[10px] text-rose-500 font-bold no-print">✕</button>
+          </div>
+        `).join('');
+      });
+    }
+
+    function updateClientField(section, idx, val) {
+      const client = appState.clients[appState.activeClientIdx];
+      client[section][idx].value = val;
+      if (section === 'interview' && idx === 0) {
+        client.name = val;
+        renderClientsBar();
+      }
+      saveState();
+    }
+
+    function addCustomField(section) {
+      const label = prompt('Enter Field / Test Name:');
+      if (!label) return;
+      appState.clients[appState.activeClientIdx][section].push({ label, value: '' });
+      saveState();
+      renderClientData();
+    }
+
+    function deleteClientField(section, idx) {
+      appState.clients[appState.activeClientIdx][section].splice(idx, 1);
+      saveState();
+      renderClientData();
+    }
+
+    function setMediaLocation(loc) {
+      appState.mediaLocation = loc;
+      document.getElementById('mediaSub-gym').className = loc === 'gym' ? 'flex-1 py-2 rounded-lg bg-slate-900 text-white' : 'flex-1 py-2 rounded-lg text-slate-600';
+      document.getElementById('mediaSub-home').className = loc === 'home' ? 'flex-1 py-2 rounded-lg bg-slate-900 text-white' : 'flex-1 py-2 rounded-lg text-slate-600';
+      saveState();
+      renderMedia();
+    }
+
+    function handleMediaUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      const isVideo = file.type.startsWith('video/');
+      appState.media[appState.mediaLocation].unshift({ title: file.name, type: isVideo ? 'video' : 'image', url: url });
+      renderMedia();
+    }
+
+    function renderMedia() {
+      const items = appState.media[appState.mediaLocation];
+      document.getElementById('mediaGrid').innerHTML = items.map((m, i) => `
+        <div class="bg-white p-3.5 rounded-2xl border border-slate-200 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <input value="${m.title}" onchange="appState.media[appState.mediaLocation][${i}].title=this.value" class="font-extrabold text-xs text-slate-900 w-full bg-transparent" />
+            <button onclick="appState.media[appState.mediaLocation].splice(${i},1);renderMedia()" class="text-xs text-rose-500 font-bold">✕</button>
+          </div>
+          ${m.type === 'video' ? `<video src="${m.url}" controls class="w-full rounded-xl max-h-56 bg-black"></video>` : ''}
+          ${m.type === 'image' ? `<img src="${m.url}" class="w-full rounded-xl max-h-56 object-cover" />` : ''}
+          ${m.type === 'note' ? `<p class="text-xs text-slate-500 bg-slate-50 p-3 rounded-xl">${m.desc}</p>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function renderGoalsAndTheory() {
+      document.getElementById('goalsGrid').innerHTML = appState.goals.map((g, i) => `
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+          <div class="flex justify-between items-center">
+            <input value="${g.title}" onchange="appState.goals[${i}].title=this.value;saveState()" class="font-extrabold text-xs text-emerald-800 bg-transparent w-full" />
+            <button onclick="appState.goals.splice(${i},1);saveState();renderGoalsAndTheory()" class="text-xs text-rose-500 font-bold">✕</button>
+          </div>
+          <textarea onchange="appState.goals[${i}].details=this.value;saveState()" rows="2" class="w-full text-xs text-slate-600 bg-transparent focus:outline-none">${g.details}</textarea>
+        </div>
+      `).join('');
+
+      document.getElementById('theoryList').innerHTML = appState.theory.map((t, i) => `
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+          <div class="flex justify-between items-center">
+            <input value="${t.title}" onchange="appState.theory[${i}].title=this.value;saveState()" class="font-extrabold text-xs text-slate-900 bg-transparent w-full" />
+            <button onclick="appState.theory.splice(${i},1);saveState();renderGoalsAndTheory()" class="text-xs text-rose-500 font-bold">✕</button>
+          </div>
+          <textarea onchange="appState.theory[${i}].body=this.value;saveState()" rows="2" class="w-full text-xs text-slate-600 bg-transparent focus:outline-none">${t.body}</textarea>
+        </div>
+      `).join('');
+    }
+
+    function addGoal() {
+      appState.goals.push({ title: 'New Goal', details: 'Write target macros & training protocol...' });
+      saveState();
+      renderGoalsAndTheory();
+    }
+
+    function addTheoryNote() {
+      appState.theory.push({ title: 'New Anatomy Topic', body: 'Write muscle origin, insertion, and action notes here...' });
+      saveState();
+      renderGoalsAndTheory();
+    }
+
+    function renderDiets() {
+      document.getElementById('dietList').innerHTML = appState.diets.map((d, i) => `
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+          <div class="flex justify-between items-center">
+            <input value="${d.title}" onchange="appState.diets[${i}].title=this.value;saveState()" class="font-extrabold text-xs text-emerald-800 bg-transparent w-full" />
+            <button onclick="appState.diets.splice(${i},1);saveState();renderDiets()" class="text-xs text-rose-500 font-bold">✕</button>
+          </div>
+          <textarea onchange="appState.diets[${i}].plan=this.value;saveState()" rows="7" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-xs leading-relaxed">${d.plan}</textarea>
+        </div>
+      `).join('');
+    }
+
+    function addDietPlan() {
+      appState.diets.push({ title: 'New Client Diet Plan', plan: 'Morning:\nLunch:\nEvening:\nDinner:' });
+      saveState();
+      renderDiets();
+    }
+
+    function setCoachingType(type) {
+      appState.coachingType = type;
+      document.getElementById('coachSub-online').className = type === 'online' ? 'flex-1 py-2 rounded-lg bg-slate-900 text-white' : 'flex-1 py-2 rounded-lg text-slate-600';
+      document.getElementById('coachSub-offline').className = type === 'offline' ? 'flex-1 py-2 rounded-lg bg-slate-900 text-white' : 'flex-1 py-2 rounded-lg text-slate-600';
+      saveState();
+      renderCoaching();
+    }
+
+    function renderCoaching() {
+      const list = appState.coaching[appState.coachingType];
+      document.getElementById('coachingList').innerHTML = list.map((item, i) => `
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
+          <div class="flex justify-between items-start gap-2">
+            <input value="${item.title}" onchange="appState.coaching[appState.coachingType][${i}].title=this.value;saveState()" class="font-extrabold text-sm text-slate-900 w-full bg-transparent" />
+            <button onclick="appState.coaching[appState.coachingType].splice(${i},1);saveState();renderCoaching()" class="text-xs text-rose-500 font-bold">✕</button>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <input value="${item.schedule}" onchange="appState.coaching[appState.coachingType][${i}].schedule=this.value;saveState()" class="p-2 bg-slate-50 rounded-xl border font-semibold" />
+            <input value="${item.fee}" onchange="appState.coaching[appState.coachingType][${i}].fee=this.value;saveState()" class="p-2 bg-emerald-50 border border-emerald-200 rounded-xl font-extrabold text-emerald-900" />
+          </div>
+          <textarea onchange="appState.coaching[appState.coachingType][${i}].notes=this.value;saveState()" rows="2" class="w-full text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border">${item.notes}</textarea>
+        </div>
+      `).join('');
+    }
+
+    function addCoachingPlan() {
+      appState.coaching[appState.coachingType].push({
+        title: appState.coachingType === 'online' ? 'New Online Coaching Slot' : 'New Home PT Client Slot',
+        schedule: 'Days & Timing',
+        fee: '₹ / month',
+        notes: 'Session details, location or Zoom link...'
+      });
+      saveState();
+      renderCoaching();
+    }
+
+    function showTab(tab) {
+      document.querySelectorAll('.tab-section').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-emerald-600', 'text-white');
+        btn.classList.add('bg-slate-800');
+      });
+      const active = document.getElementById('tabBtn-' + tab);
+      active.classList.remove('bg-slate-800');
+      active.classList.add('bg-emerald-600', 'text-white');
+    }
+
+    function shareClientReport() {
+      const c = appState.clients[appState.activeClientIdx];
+      const meas = c.measurements.map(m => `• ${m.label}: ${m.value}`).join('\n');
+      const tests = c.testing.slice(0, 8).map(t => `• ${t.label}: ${t.value}`).join('\n');
+      const msg = `*FitCoach Pro — Client Assessment Report*\nCoach: ${appState.coach.name}\nClient: ${c.name}\n\n*Measurements & Macros:*\n${meas}\n\n*Fitness Testing:*\n${tests}`;
+      sendToClientWhatsApp(msg);
+    }
+
+    function shareDietWhatsApp() {
+      const c = appState.clients[appState.activeClientIdx];
+      const d = appState.diets[0];
+      const msg = `🥗 *FitCoach Pro — Nutrition & Diet Plan*\nCoach: ${appState.coach.name}\nClient: ${c.name}\n\n*${d.title}*\n${d.plan}`;
+      sendToClientWhatsApp(msg);
+    }
+
+    function renderAll() {
+      renderCoachProfile();
+      renderClientsBar();
+      renderExercisesSection();
+      renderClientData();
+      renderMedia();
+      renderGoalsAndTheory();
+      renderDiets();
+      renderCoaching();
+      checkTrialStatus();
+    }
+
+    renderAll();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
