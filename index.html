@@ -17,46 +17,76 @@
 </head>
 <body class="bg-slate-100 text-slate-900 pb-24">
 
-  <!-- 3-DAY TRIAL EXPIRY LOCK SCREEN -->
-  <div id="trialLockModal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white max-w-md w-full rounded-3xl p-6 text-center space-y-4 shadow-2xl border border-slate-200">
-      <div class="w-16 h-16 rounded-2xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center text-3xl mx-auto font-black">🔒</div>
+  <!-- TRIAL / PACK EXPIRY LOCK SCREEN WITH 5-TIER RATE CARD & UPI -->
+  <div id="trialLockModal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-sm overflow-y-auto p-4 flex items-center justify-center">
+    <div class="bg-white max-w-md w-full rounded-3xl p-5 text-center space-y-3.5 shadow-2xl border border-slate-200 my-auto">
+      <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center text-2xl mx-auto font-black">🔒</div>
       <div>
-        <span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase">3-Day Free Trial Completed</span>
-        <h2 class="text-xl font-extrabold text-slate-900 mt-2">Don't Stop Your Progress Now!</h2>
-        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-          Your 3-day free trial with <strong>Coach Kapil Dev</strong> (K11 APT-Pro Certified) has ended. Unlock full access to your customized workouts, Indian macro diet charts, and weekly check-ins.
+        <span id="lockBadgeText" class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase">3-Day Free Trial Completed</span>
+        <h2 class="text-lg font-extrabold text-slate-900 mt-1.5">Choose Your Coaching Plan</h2>
+        <p class="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+          Train with <strong>Coach Kapil Dev</strong> (K11 APT-Pro, NSQF L4 & CPR/AED Certified). Pay via UPI & get your Unlock Code on WhatsApp.
         </p>
       </div>
-      <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-left space-y-1.5 text-xs">
-        <div class="font-extrabold text-slate-900">What You Keep With Full Access:</div>
-        <div class="text-slate-600">✅ Personalized Gym, Home & HIIT Workout Splits</div>
-        <div class="text-slate-600">✅ Custom Indian Diet Plan & Macro Updates</div>
-        <div class="text-slate-600">✅ Direct WhatsApp Form Check & Weekly Progress</div>
-      </div>
-      <button onclick="requestUnlockWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm py-3.5 rounded-2xl shadow-lg">
-        📲 Message Coach Kapil to Unlock
-      </button>
-      <div class="pt-2 border-t border-slate-100 space-y-2">
-        <label class="text-[11px] font-bold text-slate-500 block">Already have an Unlock Code? Enter below:</label>
-        <div class="flex gap-2">
-          <input id="unlockCodeInput" placeholder="Enter Code (e.g. KAPILPRO)" class="flex-1 px-3 py-2.5 bg-slate-100 rounded-xl text-xs font-extrabold uppercase text-center border border-slate-200 focus:outline-none" />
-          <button onclick="verifyUnlockCode()" class="bg-slate-900 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl">Unlock</button>
+
+      <!-- 5-TIER RATE CARD -->
+      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-left space-y-1.5 text-[11px]">
+        <div class="font-extrabold text-slate-900 text-xs mb-1">📋 Coaching Packages & Charges:</div>
+        <div class="flex justify-between items-center py-1 border-b border-slate-200">
+          <span>1. <strong>Only Workout Plan</strong> (One-Time PDF/WA)</span>
+          <span class="font-extrabold text-emerald-700 shrink-0 ml-2">₹799</span>
         </div>
-        <p id="unlockError" class="hidden text-[11px] text-rose-600 font-bold">Invalid code. Contact Coach Kapil on WhatsApp.</p>
+        <div class="flex justify-between items-center py-1 border-b border-slate-200">
+          <span>2. <strong>Only Diet Plan</strong> (One-Time Custom Chart)</span>
+          <span class="font-extrabold text-emerald-700 shrink-0 ml-2">₹799</span>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-slate-200">
+          <span>3. <strong>Online Workout + Diet</strong> (30 Days App)</span>
+          <span class="font-extrabold text-emerald-700 shrink-0 ml-2">₹2,499/mo</span>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-slate-200">
+          <span>4. <strong>VIP Online Coaching</strong> (Daily Tracking + Call)</span>
+          <span class="font-extrabold text-emerald-700 shrink-0 ml-2">₹3,999/mo</span>
+        </div>
+        <div class="flex justify-between items-center py-1">
+          <span>5. <strong>Offline 1-on-1 Home PT</strong> (Tricity 12/24 Sess.)</span>
+          <span class="font-extrabold text-emerald-700 shrink-0 ml-2">₹6k–₹12k</span>
+        </div>
+      </div>
+
+      <!-- UPI BOX -->
+      <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl flex items-center justify-between text-xs">
+        <div class="text-left">
+          <span class="text-[10px] font-bold text-emerald-800 block">GPay / PhonePe / Paytm UPI ID:</span>
+          <strong id="lockUpiDisplay" class="text-slate-900 font-extrabold">7018456690@ybl</strong>
+        </div>
+        <button onclick="copyUpiId()" class="bg-emerald-600 text-white text-[11px] font-extrabold px-2.5 py-1.5 rounded-lg">📋 Copy UPI</button>
+      </div>
+
+      <button onclick="requestUnlockWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-2xl shadow-lg">
+        📲 Send Payment Screenshot & Get Unlock Code
+      </button>
+
+      <div class="pt-2 border-t border-slate-100 space-y-1.5">
+        <label class="text-[10px] font-bold text-slate-500 block">Enter Unlock Code (KAPIL12 / KAPIL24 / KAPIL30):</label>
+        <div class="flex gap-2">
+          <input id="unlockCodeInput" placeholder="Enter Code" class="flex-1 px-3 py-2 bg-slate-100 rounded-xl text-xs font-extrabold uppercase text-center border border-slate-200 focus:outline-none" />
+          <button onclick="verifyUnlockCode()" class="bg-slate-900 text-white text-xs font-extrabold px-4 py-2 rounded-xl">Unlock</button>
+        </div>
+        <p id="unlockError" class="hidden text-[11px] text-rose-600 font-bold">Invalid code. Message Coach Kapil on WhatsApp.</p>
       </div>
     </div>
   </div>
 
-  <!-- 3-DAY TRIAL TOP BANNER -->
+  <!-- TRIAL / PACK STATUS TOP BANNER -->
   <div id="trialBanner" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs py-2 px-4 no-print">
     <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
       <div class="font-bold flex items-center gap-1.5">
         <span>🎁</span>
         <span id="trialStatusText">3-Day VIP Free Trial Active — Full Access Unlocked!</span>
       </div>
-      <button onclick="requestUnlockWhatsApp()" class="bg-slate-950/30 hover:bg-slate-950/50 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg">
-        Upgrade / Join Full Plan →
+      <button onclick="previewLockScreen()" class="bg-slate-950/30 hover:bg-slate-950/50 text-white text-[11px] font-extrabold px-2.5 py-1 rounded-lg">
+        View Plans / Renew →
       </button>
     </div>
   </div>
@@ -77,7 +107,7 @@
       </div>
       <div class="flex items-center gap-2">
         <span id="saveBadge" class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg">✓ Saved</span>
-        <div class="flex bg-slate-800 p-1 rounded-xl text-xs font-bold">
+        <div id="coachClientSwitch" class="flex bg-slate-800 p-1 rounded-xl text-xs font-bold">
           <button id="btnCoach" onclick="toggleCoachProfile()" class="px-2.5 py-1 rounded-lg bg-emerald-500 text-slate-950">👨‍🏫 Coach</button>
           <button id="btnClient" onclick="closeCoachProfile()" class="px-2.5 py-1 rounded-lg text-slate-300">👤 Client</button>
         </div>
@@ -106,23 +136,42 @@
             <input id="coachTitleInput" oninput="updateCoachInfo('title', this.value)" class="text-xs font-semibold text-emerald-400 bg-transparent focus:outline-none w-full" />
             <input id="coachLocationInput" oninput="updateCoachInfo('location', this.value)" class="text-xs text-slate-300 bg-transparent focus:outline-none w-full" />
             <input id="coachPhoneInput" oninput="updateCoachInfo('phone', this.value)" class="text-xs text-slate-300 bg-transparent focus:outline-none w-full" />
+            <div class="flex items-center gap-1.5 pt-0.5">
+              <span class="text-[10px] font-bold text-amber-400">UPI ID:</span>
+              <input id="coachUpiInput" oninput="updateCoachInfo('upi', this.value)" class="text-xs font-bold text-white bg-slate-900 px-2 py-0.5 rounded border border-slate-700 focus:outline-none" />
+            </div>
           </div>
         </div>
         <div class="flex flex-wrap gap-2">
-          <button onclick="shareTrialInvite()" class="bg-amber-400 text-slate-950 text-xs font-extrabold px-3 py-2 rounded-xl">🎁 Send 3-Day Free Trial</button>
+          <button onclick="shareTrialInvite()" class="bg-amber-400 text-slate-950 text-xs font-extrabold px-3 py-2 rounded-xl">🎁 Send Client Link</button>
           <button onclick="shareCoachCard()" class="bg-emerald-500 text-slate-950 text-xs font-extrabold px-3 py-2 rounded-xl">📲 Share Coach Card</button>
           <button onclick="closeCoachProfile()" class="bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-xl">✕ Close</button>
         </div>
       </div>
 
-      <div class="bg-slate-800/70 p-4 rounded-2xl border border-slate-700 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h3 class="text-xs font-extrabold text-amber-400 uppercase">3-Day Trial & Client Unlock Settings</h3>
-          <p class="text-[11px] text-slate-300 mt-0.5">Secret Unlock Code for paid clients: <strong class="text-emerald-400" id="displaySecretCode">KAPILPRO</strong></p>
+      <!-- AUTO-LOCK CODES & DATA BACKUP -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="bg-slate-800/70 p-4 rounded-2xl border border-slate-700 space-y-2">
+          <h3 class="text-xs font-extrabold text-amber-400 uppercase">Session & Monthly Auto-Lock Codes</h3>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            • <strong class="text-emerald-400">KAPIL12</strong> → Unlocks 12 Sessions / 30 Days<br/>
+            • <strong class="text-emerald-400">KAPIL24</strong> → Unlocks 24 Sessions / 60 Days<br/>
+            • <strong class="text-emerald-400">KAPIL30</strong> → Unlocks 30 Days Online Plan<br/>
+            • <strong class="text-amber-300">KAPILPRO</strong> → Coach Permanent Unlock
+          </p>
+          <button onclick="previewLockScreen()" class="bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-bold px-3 py-1.5 rounded-xl">👁️ Test Lock & Rate Card</button>
         </div>
-        <div class="flex gap-2">
-          <button onclick="changeSecretCode()" class="bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl">🔑 Change Code</button>
-          <button onclick="previewLockScreen()" class="bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-bold px-3 py-1.5 rounded-xl">👁️ Test Lock Screen</button>
+
+        <div class="bg-slate-800/70 p-4 rounded-2xl border border-slate-700 space-y-2">
+          <h3 class="text-xs font-extrabold text-emerald-400 uppercase">Client Data Backup & Restore</h3>
+          <p class="text-[11px] text-slate-300">Download weekly JSON backup so you never lose client records if you switch phones.</p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button onclick="exportBackupJSON()" class="bg-emerald-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-xl">💾 Download Backup</button>
+            <label class="bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl cursor-pointer">
+              📂 Restore Backup
+              <input type="file" accept=".json" onchange="importBackupJSON(event)" class="hidden" />
+            </label>
+          </div>
         </div>
       </div>
 
@@ -140,21 +189,40 @@
   <div class="bg-slate-900 text-slate-300 border-b border-slate-800 no-print">
     <div class="max-w-5xl mx-auto px-4 flex gap-2 overflow-x-auto no-scrollbar py-2.5 text-xs font-bold">
       <button onclick="showTab('exercises')" id="tabBtn-exercises" class="tab-btn bg-emerald-600 text-white px-3.5 py-2 rounded-xl shrink-0">1. Master Exercises, Splits & HIIT</button>
-      <button onclick="showTab('clientData')" id="tabBtn-clientData" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">2. Client Data & Testing</button>
+      <button onclick="showTab('clientData')" id="tabBtn-clientData" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">2. Client Data, PAR-Q & Sessions</button>
       <button onclick="showTab('nutrition')" id="tabBtn-nutrition" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">3. Nutrition & Diet</button>
       <button onclick="showTab('goalsTheory')" id="tabBtn-goalsTheory" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">4. Goals & Theory</button>
       <button onclick="showTab('media')" id="tabBtn-media" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">5. Videos & Photos</button>
-      <button onclick="showTab('trainingMode')" id="tabBtn-trainingMode" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">6. Online / Home PT</button>
+      <button onclick="showTab('trainingMode')" id="tabBtn-trainingMode" class="tab-btn bg-slate-800 px-3.5 py-2 rounded-xl shrink-0">6. 5-Tier Plans & Home PT</button>
     </div>
   </div>
 
-  <!-- Client Selector + Direct WhatsApp Number Bar -->
-  <div class="bg-white border-b border-slate-200 no-print">
+  <!-- Client Selector + Session Counter + Direct WhatsApp Bar -->
+  <div id="coachClientBar" class="bg-white border-b border-slate-200 no-print">
     <div class="max-w-5xl mx-auto px-4 py-2.5 space-y-2">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar" id="clientPills"></div>
         <button onclick="addNewClient()" class="bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl shrink-0">+ Add Client</button>
       </div>
+
+      <!-- SESSION COUNTER & WEIGHT LOG STRIP -->
+      <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 border border-slate-200 p-2 rounded-xl text-xs">
+        <div class="flex items-center gap-2">
+          <span class="font-extrabold text-slate-700">📊 Sessions Completed:</span>
+          <span id="sessionCounterText" class="bg-slate-900 text-white font-extrabold px-2.5 py-0.5 rounded-lg">0 / 12</span>
+          <button onclick="incrementClientSession()" class="bg-emerald-600 text-white font-extrabold px-2.5 py-1 rounded-lg text-[11px]">+1 Session Done</button>
+          <button onclick="resetClientSession()" class="bg-slate-200 text-slate-700 font-bold px-2 py-1 rounded-lg text-[11px]">Reset</button>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="font-bold text-slate-600">Pack:</span>
+          <select id="clientPackSelect" onchange="updateClientPack(this.value)" class="bg-white border border-slate-300 rounded-lg px-2 py-1 font-bold text-xs">
+            <option value="12">12 Sessions (1 Mo)</option>
+            <option value="24">24 Sessions (2 Mo)</option>
+            <option value="30">30 Days Online</option>
+          </select>
+        </div>
+      </div>
+
       <div class="flex flex-wrap items-center justify-between gap-2 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl">
         <div class="flex items-center gap-2 flex-1 min-w-[220px]">
           <span class="text-xs font-extrabold text-emerald-900 shrink-0">📱 Client WhatsApp:</span>
@@ -167,7 +235,6 @@
       </div>
     </div>
   </div>
-
   <main class="max-w-5xl mx-auto px-4 pt-4 space-y-5">
 
     <!-- ==================== TAB 1: MASTER EXERCISE BANK, SPLITS & CARDIO/HIIT/FUNCTIONAL ==================== -->
@@ -184,7 +251,6 @@
           </div>
         </div>
 
-        <!-- 3 Main Sub-Tabs -->
         <div class="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-extrabold">
           <button id="exMode-muscles" onclick="setExMode('muscles')" class="py-2 px-1 rounded-lg bg-slate-900 text-white text-center">💪 Muscle Bank</button>
           <button id="exMode-splits" onclick="setExMode('splits')" class="py-2 px-1 rounded-lg text-slate-600 text-center">📅 Workout Splits</button>
@@ -204,7 +270,7 @@
         <div id="muscleExerciseList" class="space-y-2.5"></div>
       </div>
 
-      <!-- SUB-VIEW 2: WORKOUT SPLITS (FULL BODY, UPPER/LOWER, PPL + ADD) -->
+      <!-- SUB-VIEW 2: WORKOUT SPLITS -->
       <div id="view-splits" class="hidden space-y-3">
         <div class="bg-white p-3.5 rounded-2xl border border-slate-200 space-y-2.5">
           <div class="flex items-center justify-between">
@@ -229,17 +295,29 @@
       </div>
     </section>
 
-    <!-- ==================== TAB 2: CLIENT DATA, MEASUREMENTS & FITNESS TESTING ==================== -->
+    <!-- ==================== TAB 2: CLIENT DATA, PAR-Q & FITNESS TESTING ==================== -->
     <section id="tab-clientData" class="tab-section hidden space-y-4">
       <div class="bg-white p-4 rounded-2xl border border-slate-200 flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 class="text-base font-extrabold text-slate-900">Client Assessment, Measurements & Fitness Testing</h2>
-          <p class="text-xs text-slate-500">Complete interview, wellness, anthropometry & physical testing profile</p>
+          <h2 class="text-base font-extrabold text-slate-900">Client Assessment, PAR-Q Safety & Testing</h2>
+          <p class="text-xs text-slate-500">Complete PAR-Q medical screening, measurements & fitness testing profile</p>
         </div>
         <div class="flex gap-2 no-print">
           <button onclick="shareClientReport()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">📲 Send Report</button>
           <button onclick="window.print()" class="bg-slate-100 text-slate-800 text-xs font-bold px-3 py-2 rounded-xl">🖨️ Save PDF</button>
         </div>
+      </div>
+
+      <!-- PAR-Q SAFETY QUESTIONNAIRE -->
+      <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-extrabold uppercase tracking-wider text-amber-900">🛡️ PAR-Q Medical Safety Screening (Mandatory)</h3>
+          <span class="text-[10px] font-bold bg-amber-200 text-amber-900 px-2 py-0.5 rounded">K11 & CPR Safety Protocol</span>
+        </div>
+        <div id="parqFields" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        <p class="text-[10px] text-amber-800 leading-relaxed">
+          <strong>Medical Disclaimer:</strong> If any PAR-Q item is marked "Yes", consult a physician before starting vigorous physical activity.
+        </p>
       </div>
 
       <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
@@ -338,33 +416,58 @@
       <div id="mediaGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
     </section>
 
-    <!-- ==================== TAB 6: ONLINE & OFFLINE HOME PT ==================== -->
+    <!-- ==================== TAB 6: 5-TIER PLANS & ONLINE / HOME PT ==================== -->
     <section id="tab-trainingMode" class="tab-section hidden space-y-4">
       <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 class="text-base font-extrabold">Online & Offline Home Personal Training</h2>
-            <p class="text-xs text-slate-500">Chandigarh Tricity home PT, online coaching & specialized modules</p>
+            <h2 class="text-base font-extrabold">5-Tier Coaching Packages & Home PT</h2>
+            <p class="text-xs text-slate-500">Share rate card directly on WhatsApp or customize plans</p>
           </div>
-          <button onclick="addCoachingPlan()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">+ Add Plan / Slot</button>
+          <div class="flex gap-2">
+            <button onclick="shareRateCardWhatsApp()" class="bg-slate-900 text-white text-xs font-extrabold px-3 py-2 rounded-xl">📲 Send Rate Card</button>
+            <button onclick="addCoachingPlan()" class="bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">+ Add Plan</button>
+          </div>
         </div>
         <div class="flex bg-slate-100 p-1 rounded-xl text-xs font-extrabold">
-          <button id="coachSub-online" onclick="setCoachingType('online')" class="flex-1 py-2 rounded-lg bg-slate-900 text-white">💻 Online Training</button>
+          <button id="coachSub-online" onclick="setCoachingType('online')" class="flex-1 py-2 rounded-lg bg-slate-900 text-white">💻 Online & One-Time Plans</button>
           <button id="coachSub-offline" onclick="setCoachingType('offline')" class="flex-1 py-2 rounded-lg text-slate-600">🏡 Offline Home Training</button>
         </div>
       </div>
       <div id="coachingList" class="space-y-3"></div>
     </section>
 
+    <!-- CREDENTIALS & SAFETY FOOTER -->
+    <footer class="bg-slate-900 text-slate-300 p-4 rounded-2xl border border-slate-800 text-center space-y-1.5 text-xs">
+      <div class="font-extrabold text-white">Coach Kapil Dev — Chandigarh Tricity Studio</div>
+      <div class="flex flex-wrap justify-center gap-1.5 text-[10px] font-extrabold">
+        <span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">🏅 K11 APT-Pro (Distinction)</span>
+        <span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">✅ NSQF Level 4 Certified</span>
+        <span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded">🚑 CPR & AED Certified</span>
+      </div>
+      <div class="text-[10px] text-slate-400 pt-1">
+        Chandigarh • Mohali • Panchkula | <a href="privacy.html" class="underline text-emerald-400">Privacy Policy</a>
+      </div>
+    </footer>
+
   </main>
 
   <script>
-    const prevData = JSON.parse(localStorage.getItem('fitcoach_pro_v6') || localStorage.getItem('fitcoach_pro_v5') || 'null');
+    const isClientLink = new URLSearchParams(window.location.search).get('mode') === 'client';
+    const prevData = JSON.parse(localStorage.getItem('fitcoach_pro_v7') || localStorage.getItem('fitcoach_pro_v6') || 'null');
 
     const defaultClientTemplate = (name, phone = '') => ({
       id: Date.now() + Math.random(),
       name: name,
       phone: phone,
+      sessionsDone: 0,
+      packTotal: 12,
+      parq: [
+        { label: 'Heart condition or chest pain during exercise? (Yes/No)', value: 'No' },
+        { label: 'Dizziness, balance loss, or fainting history? (Yes/No)', value: 'No' },
+        { label: 'Bone, joint, spine, or knee injury? (Yes/No)', value: 'No' },
+        { label: 'High Blood Pressure or Diabetes medication? (Yes/No)', value: 'No' }
+      ],
       measurements: [
         { label: 'Target Calories (kcal)', value: '1850' },
         { label: 'Target Protein (g)', value: '140' },
@@ -404,8 +507,8 @@
         { label: 'Stress Level (Low/Medium/High)', value: 'Medium' },
         { label: 'Does Exercise Help Mental Health? (Yes/No)', value: 'Yes' },
         { label: 'Stress Management Techniques', value: 'Walking & deep breathing' },
-        { label: 'Initial Assessment Date', value: '2026-11-25' },
-        { label: 'Next Scheduled Check-In Date', value: '2026-12-25' }
+        { label: 'Initial Assessment Date', value: '2026-11-28' },
+        { label: 'Next Scheduled Check-In Date', value: '2026-12-28' }
       ],
       testing: [
         { label: 'Digital Blood Pressure (Manual/Digital)', value: '120/80 mmHg' },
@@ -419,12 +522,11 @@
         { label: 'Flexibility (Visual Assessment) — Quadriceps', value: 'Normal' },
         { label: 'Flexibility (Visual Assessment) — Hamstrings', value: 'Slightly Tight' },
         { label: 'Flexibility (Visual Assessment) — Hip Flexors', value: 'Normal' },
-        { label: 'Date of Fitness Testing', value: '2026-11-25' },
+        { label: 'Date of Fitness Testing', value: '2026-11-28' },
         { label: 'Scheduled Date for Next Test', value: '2027-01-10' }
       ]
     });
 
-    // MASTER MUSCLE & EXERCISE LIBRARY FROM SCREENSHOT 1
     const defaultMuscleBank = [
       { id: 'm1', muscle: 'Chest', sub: 'Clavicular Head (Upper) — Shoulder flexion / horizontal adduction', name: 'Incline Chest Press / Scoop / Low-to-High Cable Fly (30°–65°)', sets: '4', reps: '10-12', rest: '90s' },
       { id: 'm2', muscle: 'Chest', sub: 'Sternocostal Head (Mid) — Horizontal adduction & internal rotation', name: 'Flat Bench Press / Pec Deck Fly', sets: '4', reps: '8-12', rest: '90s' },
@@ -455,7 +557,6 @@
       { id: 'm27', muscle: 'Adductors & Calves', sub: 'Gastrocnemius, Soleus & Tibialis Anterior', name: 'Seated Calf Raise / Leg Press Calf Raise / Standing Calf / Cable Toe Raises', sets: '4', reps: '15-20', rest: '45s' }
     ];
 
-    // WORKOUT SPLITS (FULL BODY, UPPER/LOWER, PPL)
     const defaultSplits = [
       {
         name: 'Full Body Split',
@@ -495,7 +596,6 @@
       }
     ];
 
-    // CARDIO, HIIT & FUNCTIONAL STRENGTH FROM SCREENSHOT 2
     const defaultCardioBank = [
       { id: 'c1', category: 'Cardio', sub: 'Karvonen HR Zone: ((220 - Age - RHR) × %) + RHR', name: 'Weight-Bearing Impact Cardio (Treadmill Incline Walk / Jogging)', sets: '1', reps: '25–35 mins', rest: 'Zone 2 (60–70% HR)' },
       { id: 'c2', category: 'Cardio', sub: 'Non-Impact / Joint-Friendly Endurance', name: 'Stationary Cycling / Elliptical Cross-Trainer / Rowing Machine', sets: '1', reps: '20–30 mins', rest: 'Moderate Pace' },
@@ -507,7 +607,7 @@
       { id: 'c8', category: 'Agility & Sandbag', sub: 'Speed, Footwork & Odd-Object Functional Strength', name: 'Agility Ladder Drills / Cone Shuttle + Sandbag Squat, Lunge & Clean', sets: '4', reps: '12-15 / 30s', rest: '60s' }
     ];
 
-    let appState = JSON.parse(localStorage.getItem('fitcoach_pro_v7')) || {
+    let appState = JSON.parse(localStorage.getItem('fitcoach_pro_v8')) || {
       activeClientIdx: 0,
       exMode: 'muscles',
       selectedMuscleFilter: 'All',
@@ -517,14 +617,16 @@
       mediaLocation: 'gym',
       coachingType: 'online',
       trialStart: (prevData && prevData.trialStart) ? prevData.trialStart : Date.now(),
-      isUnlocked: (prevData && prevData.isUnlocked) ? prevData.isUnlocked : false,
-      secretCode: (prevData && prevData.secretCode) ? prevData.secretCode : 'KAPILPRO',
-      coach: (prevData && prevData.coach) ? prevData.coach : {
+      accessType: (prevData && prevData.isUnlocked) ? 'permanent' : 'trial',
+      accessExpiry: null,
+      packLabel: '3-Day Free Trial',
+      coach: (prevData && prevData.coach) ? { upi: '7018456690@ybl', ...prevData.coach } : {
         photo: '',
         name: 'Coach Kapil Dev',
         title: 'Certified Personal Trainer (K11 APT-Pro Distinction)',
         location: 'Service Area: Chandigarh, Mohali & Panchkula',
         phone: '+91 7018456690',
+        upi: '7018456690@ybl',
         credentials: [
           { label: 'Certification 1', value: 'K11 Advanced Personal Trainer Pro (APT-Pro) — Distinction' },
           { label: 'Certification 2', value: 'NSQF Level 4 — General Fitness Trainer (SPEFL-SC)' },
@@ -533,13 +635,18 @@
           { label: 'Specialties', value: 'Fat Loss, Hypertrophy, Home PT & Biomechanics' }
         ]
       },
-      clients: (prevData && prevData.clients) ? prevData.clients : [
+      clients: (prevData && prevData.clients) ? prevData.clients.map(c => ({
+        sessionsDone: 0,
+        packTotal: 12,
+        parq: defaultClientTemplate(c.name).parq,
+        ...c
+      })) : [
         defaultClientTemplate('Rahul Sharma (Sector 17)', ''),
         defaultClientTemplate('Client B — Mohali', '')
       ],
-      muscleBank: defaultMuscleBank,
-      splits: defaultSplits,
-      cardioBank: defaultCardioBank,
+      muscleBank: (prevData && prevData.muscleBank) ? prevData.muscleBank : defaultMuscleBank,
+      splits: (prevData && prevData.splits) ? prevData.splits : defaultSplits,
+      cardioBank: (prevData && prevData.cardioBank) ? prevData.cardioBank : defaultCardioBank,
       media: {
         gym: [{ title: 'Gym Setup — Barbell & Dumbbell Form Reference', type: 'note', desc: 'Tap "+ Add Video / Photo" above to attach gallery clips for Gym exercises.' }],
         home: [{ title: 'Home Setup — Bodyweight & Resistance Band Form', type: 'note', desc: 'Tap "+ Add Video / Photo" above to attach gallery clips for Home workouts.' }]
@@ -563,20 +670,22 @@
           plan: 'Pre-Workout (6:00 AM): 4 Almonds, 1 Walnut, Chia Seeds + Green Tea\nIntra-Workout: 1 Scoop Creatine Monohydrate + Water\nBreakfast (8:30 AM): 4 Egg Whites + 2 Whole Eggs / Paneer Bhurji + 2 Multigrain Rotis\nLunch (1:30 PM): 120g Chicken Breast / Soya Chunks + Dal + Sabzi + Salad\nEvening Snack (5:30 PM): Roasted Makhana / Whey Protein Scoop\nDinner (8:30 PM): Grilled Paneer / Tofu + Stir-fry Veggies + 1 Roti'
         }
       ],
-      coaching: (prevData && prevData.coaching) ? prevData.coaching : {
+      coaching: {
         online: [
-          { title: 'Online 1-on-1 Coaching (Monthly)', schedule: 'Weekly Video Check-In + Custom Diet & Workout App Access', fee: '₹3,500 / month', notes: 'Form check via WhatsApp videos, weekly macro adjustments & 24/7 chat support.' },
-          { title: 'Live Zoom / Video Call Personal Training', schedule: 'Mon / Wed / Fri — 7:00 AM or 6:00 PM', fee: '₹5,500 / month', notes: 'Real-time posture correction and guided 45-min home workout session.' }
+          { title: '1. Only Workout Plan (One-Time Custom Split)', schedule: '4-Day or 6-Day Gym/Home Routine (WhatsApp & PDF)', fee: '₹799 (One-Time)', notes: 'Goal-specific sets, reps, rest time & form cues delivered on WhatsApp.' },
+          { title: '2. Only Diet Plan (One-Time Indian Meal Chart)', schedule: 'Custom Calorie & Macro Chart (Veg / Non-Veg / Egg)', fee: '₹799 (One-Time)', notes: 'Ghar ka khana diet plan tailored to weight, height & fat loss/muscle goal.' },
+          { title: '3. Online Workout + Diet Combo (Standard)', schedule: '30 Days App Access + Weekly Weight Check-In', fee: '₹2,499 / month', notes: 'Complete workout + diet combo with fortnightly adjustments & WhatsApp support.' },
+          { title: '4. VIP Online Coaching (Full Accountability)', schedule: '30 Days App + Daily Meal/Form Check + Weekly Call', fee: '₹3,999 / month', notes: 'Daily WhatsApp meal photo & exercise video review + 1 weekly video call.' }
         ],
         offline: [
-          { title: 'Chandigarh Tricity Home PT (12 Sessions)', schedule: 'Sector 17, Mohali, Panchkula — Morning / Evening Slots', fee: '₹8,000 / month', notes: 'Doorstep 1-on-1 personal training with portable equipment & body composition tracking.' },
-          { title: '12-Week Fat Loss & Core Conditioning (Home / Society Gym)', schedule: '5 Days/Week — 60 Mins Session', fee: '₹12,000 / month', notes: 'Resistance training + progressive NEAT, fitness testing & custom Indian diet chart.' }
+          { title: '5A. Offline 1-on-1 Home PT — 12 Sessions Pack', schedule: 'Chandigarh, Mohali, Panchkula (3 Days/Week)', fee: '₹6,000 – ₹8,000 / mo', notes: 'Doorstep 1-on-1 personal training + FitCoach Pro 12-session app access.' },
+          { title: '5B. Offline 1-on-1 Home PT — 24 Sessions Pack', schedule: 'Chandigarh, Mohali, Panchkula (5–6 Days/Week)', fee: '₹10,000 – ₹12,000 / mo', notes: 'Complete transformation pack with fitness testing, diet chart & 24-session app access.' }
         ]
       }
     };
 
     function saveState() {
-      localStorage.setItem('fitcoach_pro_v7', JSON.stringify(appState));
+      localStorage.setItem('fitcoach_pro_v8', JSON.stringify(appState));
       document.getElementById('saveBadge').textContent = '✓ Saved';
     }
 
@@ -593,6 +702,68 @@
     function updateClientPhone(val) {
       appState.clients[appState.activeClientIdx].phone = val;
       saveState();
+    }
+
+    // SESSION COUNTER FUNCTIONS
+    function incrementClientSession() {
+      const c = appState.clients[appState.activeClientIdx];
+      c.sessionsDone = (c.sessionsDone || 0) + 1;
+      saveState();
+      renderClientsBar();
+      if (c.sessionsDone >= (c.packTotal || 12)) {
+        alert(`⚠️ ${c.name} ke ${c.packTotal} sessions poore ho gaye hain! Renewal reminder bhejein.`);
+      }
+    }
+
+    function resetClientSession() {
+      const c = appState.clients[appState.activeClientIdx];
+      c.sessionsDone = 0;
+      saveState();
+      renderClientsBar();
+    }
+
+    function updateClientPack(val) {
+      const c = appState.clients[appState.activeClientIdx];
+      c.packTotal = parseInt(val, 10) || 12;
+      saveState();
+      renderClientsBar();
+    }
+
+    // JSON BACKUP & RESTORE
+    function exportBackupJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+      const dl = document.createElement('a');
+      dl.setAttribute("href", dataStr);
+      dl.setAttribute("download", `FitCoachPro_Backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(dl);
+      dl.click();
+      dl.remove();
+    }
+
+    function importBackupJSON(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (parsed && parsed.clients) {
+            appState = parsed;
+            saveState();
+            renderAll();
+            alert('✅ Backup successfully restored!');
+          }
+        } catch (err) {
+          alert('❌ Invalid backup JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function copyUpiId() {
+      const upi = appState.coach.upi || '7018456690@ybl';
+      navigator.clipboard.writeText(upi);
+      alert('✅ UPI ID Copied: ' + upi);
     }
 
     // CHECKBOX SELECTION LOGIC
@@ -640,7 +811,6 @@
       sendToClientWhatsApp(msg);
     }
 
-    // EX MODE & RENDERS
     function setExMode(mode) {
       appState.exMode = mode;
       ['muscles', 'splits', 'cardio'].forEach(m => {
@@ -655,7 +825,6 @@
 
     function renderExercisesSection() {
       updateSelectedBadges();
-      // 1. Muscle Bank
       const muscles = ['All', ...new Set(appState.muscleBank.map(m => m.muscle))];
       document.getElementById('muscleFilterPills').innerHTML = muscles.map(m => `
         <button onclick="appState.selectedMuscleFilter='${m}';renderExercisesSection()" class="px-3 py-1 rounded-xl text-xs font-bold shrink-0 border ${appState.selectedMuscleFilter === m ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-slate-50 text-slate-700 border-slate-200'}">${m}</button>
@@ -688,7 +857,6 @@
         `;
       }).join('');
 
-      // 2. Splits
       document.getElementById('splitFilterPills').innerHTML = appState.splits.map((s, i) => `
         <button onclick="appState.selectedSplitIdx=${i};renderExercisesSection()" class="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 border ${appState.selectedSplitIdx === i ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-50 text-slate-700 border-slate-200'}">${s.name}</button>
       `).join('');
@@ -727,7 +895,6 @@
         </div>
       `;
 
-      // 3. Cardio / HIIT / Functional
       const cats = ['All', ...new Set(appState.cardioBank.map(c => c.category))];
       document.getElementById('cardioFilterPills').innerHTML = cats.map(c => `
         <button onclick="appState.selectedCardioFilter='${c}';renderExercisesSection()" class="px-3 py-1 rounded-xl text-xs font-bold shrink-0 border ${appState.selectedCardioFilter === c ? 'bg-amber-500 text-slate-950 border-amber-500' : 'bg-slate-50 text-slate-700 border-slate-200'}">${c}</button>
@@ -762,7 +929,7 @@
     }
 
     function addMuscleExercise() {
-      const muscle = prompt('Muscle Group (e.g. Chest, Back & Lats, Shoulders, Biceps, Triceps, Quadriceps, Glutes):', appState.selectedMuscleFilter === 'All' ? 'Chest' : appState.selectedMuscleFilter);
+      const muscle = prompt('Muscle Group:', appState.selectedMuscleFilter === 'All' ? 'Chest' : appState.selectedMuscleFilter);
       if (!muscle) return;
       const name = prompt('Exercise Name:');
       if (!name) return;
@@ -772,14 +939,9 @@
     }
 
     function addNewSplit() {
-      const name = prompt('New Split Name (e.g. Bro Split, Fat Loss 5-Day, Home Body Split):');
+      const name = prompt('New Split Name:');
       if (!name) return;
-      appState.splits.push({
-        name: name.trim(),
-        schedule: 'Custom Schedule',
-        notes: 'Coach instructions...',
-        exercises: [{ name: 'Exercise 1', muscle: 'Target Muscle', sets: '3', reps: '12', rest: '60s' }]
-      });
+      appState.splits.push({ name: name.trim(), schedule: 'Custom Schedule', notes: 'Coach instructions...', exercises: [{ name: 'Exercise 1', muscle: 'Target Muscle', sets: '3', reps: '12', rest: '60s' }] });
       appState.selectedSplitIdx = appState.splits.length - 1;
       saveState();
       renderExercisesSection();
@@ -792,7 +954,7 @@
     }
 
     function addCardioExercise() {
-      const category = prompt('Category (Cardio, HIIT, Kettlebell, Bodyweight, Battle Rope & TRX, Agility & Sandbag):', appState.selectedCardioFilter === 'All' ? 'HIIT' : appState.selectedCardioFilter);
+      const category = prompt('Category:', appState.selectedCardioFilter === 'All' ? 'HIIT' : appState.selectedCardioFilter);
       if (!category) return;
       const name = prompt('Exercise / Protocol Name:');
       if (!name) return;
@@ -801,54 +963,80 @@
       renderExercisesSection();
     }
 
-    // 3-DAY FREE TRIAL & LOCK LOGIC
+    // SESSION / MONTHLY AUTO-LOCK SYSTEM
     function checkTrialStatus() {
-      const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
-      const elapsed = Date.now() - appState.trialStart;
-      const remainingMs = threeDaysMs - elapsed;
       const banner = document.getElementById('trialBanner');
       const statusText = document.getElementById('trialStatusText');
+      const lockModal = document.getElementById('trialLockModal');
+      const lockBadge = document.getElementById('lockBadgeText');
+      document.getElementById('lockUpiDisplay').textContent = appState.coach.upi || '7018456690@ybl';
 
-      if (appState.isUnlocked) {
+      if (appState.accessType === 'permanent') {
         banner.classList.add('hidden');
-        document.getElementById('trialLockModal').classList.add('hidden');
+        lockModal.classList.add('hidden');
         return;
       }
 
+      if (appState.accessType === 'timed' && appState.accessExpiry) {
+        const rem = appState.accessExpiry - Date.now();
+        if (rem > 0) {
+          const daysLeft = Math.ceil(rem / (1000 * 60 * 60 * 24));
+          statusText.textContent = `✅ ${appState.packLabel} Active — ${daysLeft} Day(s) Remaining`;
+          lockModal.classList.add('hidden');
+          return;
+        } else {
+          lockBadge.textContent = `${appState.packLabel} Expired — Renew Plan`;
+          statusText.textContent = `⚠️ ${appState.packLabel} Completed — Renew to Continue`;
+          lockModal.classList.remove('hidden');
+          return;
+        }
+      }
+
+      const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+      const remainingMs = threeDaysMs - (Date.now() - appState.trialStart);
       if (remainingMs > 0) {
-        const hrsLeft = Math.ceil(remainingMs / (1000 * 60 * 60));
-        const daysLeft = Math.ceil(hrsLeft / 24);
-        statusText.textContent = `🎁 3-Day Free Trial Active — ${daysLeft} Day(s) (${hrsLeft} hrs) Remaining!`;
+        const daysLeft = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
+        statusText.textContent = `🎁 3-Day Free Trial Active — ${daysLeft} Day(s) Remaining!`;
       } else {
-        statusText.textContent = `⚠️ 3-Day Free Trial Expired — Unlock Full Access Now`;
-        document.getElementById('trialLockModal').classList.remove('hidden');
+        lockBadge.textContent = '3-Day Free Trial Completed';
+        statusText.textContent = '⚠️ 3-Day Free Trial Expired — Unlock Full Access Now';
+        lockModal.classList.remove('hidden');
       }
     }
 
     function requestUnlockWhatsApp() {
-      const msg = `Hi Coach Kapil Dev! I loved my 3-Day Free Trial on *FitCoach Pro* and want to join your full coaching plan & get my App Unlock Code.`;
+      const msg = `Hi Coach Kapil Dev! Maine *FitCoach Pro* ka plan check kiya hai. Main payment karke apna Unlock Code lena chahta/chahti hoon.`;
       window.location.href = 'https://wa.me/917018456690?text=' + encodeURIComponent(msg);
     }
 
     function verifyUnlockCode() {
-      const input = document.getElementById('unlockCodeInput').value.trim().toUpperCase();
-      if (input === appState.secretCode.toUpperCase()) {
-        appState.isUnlocked = true;
-        saveState();
-        document.getElementById('trialLockModal').classList.add('hidden');
-        document.getElementById('trialBanner').classList.add('hidden');
-        alert('🎉 FitCoach Pro Unlocked!');
+      const code = document.getElementById('unlockCodeInput').value.trim().toUpperCase();
+      const dayMs = 24 * 60 * 60 * 1000;
+
+      if (code === 'KAPILPRO') {
+        appState.accessType = 'permanent';
+        appState.packLabel = 'Coach Full Access';
+      } else if (code === 'KAPIL12') {
+        appState.accessType = 'timed';
+        appState.accessExpiry = Date.now() + (30 * dayMs);
+        appState.packLabel = '12 Sessions / 30-Day Pack';
+      } else if (code === 'KAPIL24') {
+        appState.accessType = 'timed';
+        appState.accessExpiry = Date.now() + (60 * dayMs);
+        appState.packLabel = '24 Sessions / 60-Day Pack';
+      } else if (code === 'KAPIL30') {
+        appState.accessType = 'timed';
+        appState.accessExpiry = Date.now() + (30 * dayMs);
+        appState.packLabel = '30-Day Online Coaching Plan';
       } else {
         document.getElementById('unlockError').classList.remove('hidden');
+        return;
       }
-    }
 
-    function changeSecretCode() {
-      const code = prompt('Set New Client Unlock Code (e.g., KAPIL2026):', appState.secretCode);
-      if (!code) return;
-      appState.secretCode = code.trim().toUpperCase();
       saveState();
-      document.getElementById('displaySecretCode').textContent = appState.secretCode;
+      document.getElementById('unlockError').classList.add('hidden');
+      checkTrialStatus();
+      alert('🎉 Unlocked: ' + appState.packLabel);
     }
 
     function previewLockScreen() {
@@ -856,11 +1044,17 @@
     }
 
     function shareTrialInvite() {
-      const msg = `🎁 *Start Your 3-Day VIP Free Trial with Coach Kapil Dev!*\n\nGet:\n✅ Personal Fitness Assessment & Body Analysis\n✅ Custom Gym, Home & HIIT Workout Plan\n✅ Indian Meal & Macro Diet Guide\n\nOpen FitCoach Pro App Now:\nhttps://fitcoachpro-kapil.netlify.app`;
+      const msg = `🎁 *Start Your 3-Day VIP Free Trial with Coach Kapil Dev!*\n(K11 APT-Pro, NSQF Level 4 & CPR/AED Certified)\n\n✅ Custom Gym, Home & HIIT Workouts\n✅ Indian Meal & Macro Diet Chart\n✅ Direct WhatsApp Coaching\n\nOpen FitCoach Pro Client App:\nhttps://fitcoachpro.tiiny.site/?mode=client`;
+      sendToClientWhatsApp(msg);
+    }
+
+    function shareRateCardWhatsApp() {
+      const msg = `📋 *COACH KAPIL DEV — COACHING PACKAGES*\n(K11 APT-Pro, NSQF L4 & CPR/AED Certified)\n\n1️⃣ *Only Workout Plan (One-Time):* ₹799\n2️⃣ *Only Diet Plan (One-Time):* ₹799\n3️⃣ *Online Workout + Diet Combo:* ₹2,499 / month\n4️⃣ *VIP Online Coaching (Daily Tracking):* ₹3,999 / month\n5️⃣ *Offline 1-on-1 Home PT (Chandigarh Tricity):* ₹6,000 – ₹12,000 / month\n\n💳 UPI ID: *${appState.coach.upi}*\n📲 Reply with your chosen package to start!`;
       sendToClientWhatsApp(msg);
     }
 
     function toggleCoachProfile() {
+      if (isClientLink) return;
       document.getElementById('coachProfilePanel').classList.toggle('hidden');
       document.getElementById('btnCoach').className = 'px-2.5 py-1 rounded-lg bg-emerald-500 text-slate-950';
       document.getElementById('btnClient').className = 'px-2.5 py-1 rounded-lg text-slate-300';
@@ -913,7 +1107,7 @@
       document.getElementById('coachTitleInput').value = c.title;
       document.getElementById('coachLocationInput').value = c.location;
       document.getElementById('coachPhoneInput').value = c.phone;
-      document.getElementById('displaySecretCode').textContent = appState.secretCode;
+      document.getElementById('coachUpiInput').value = c.upi || '7018456690@ybl';
 
       if (c.photo) {
         document.getElementById('coachAvatarPreview').src = c.photo;
@@ -938,7 +1132,7 @@
     function shareCoachCard() {
       const c = appState.coach;
       const creds = c.credentials.map(x => `• ${x.value}`).join('\n');
-      const msg = `*${c.name}*\n${c.title}\n${c.location}\n📞 ${c.phone}\n\n*Credentials & Experience:*\n${creds}\n\n🎁 Start 3-Day Free Trial: https://fitcoachpro-kapil.netlify.app`;
+      const msg = `*${c.name}*\n${c.title}\n${c.location}\n📞 ${c.phone}\n\n*Credentials & Experience:*\n${creds}\n\n🎁 Start 3-Day Free Trial: https://fitcoachpro.tiiny.site/?mode=client`;
       sendToClientWhatsApp(msg);
     }
 
@@ -950,6 +1144,8 @@
       `).join('');
       const active = appState.clients[appState.activeClientIdx];
       document.getElementById('activeClientPhone').value = active.phone || '';
+      document.getElementById('sessionCounterText').textContent = `${active.sessionsDone || 0} / ${active.packTotal || 12}`;
+      document.getElementById('clientPackSelect').value = String(active.packTotal || 12);
     }
 
     function selectClient(idx) {
@@ -970,6 +1166,14 @@
 
     function renderClientData() {
       const client = appState.clients[appState.activeClientIdx];
+      const parqList = client.parq || defaultClientTemplate(client.name).parq;
+      document.getElementById('parqFields').innerHTML = parqList.map((item, i) => `
+        <div class="p-2.5 bg-white rounded-xl border border-amber-200">
+          <label class="text-[10px] font-bold text-slate-600 block">${item.label}</label>
+          <input value="${item.value}" onchange="appState.clients[${appState.activeClientIdx}].parq[${i}].value=this.value;saveState()" class="w-full text-xs font-extrabold text-slate-900 bg-transparent focus:outline-none mt-0.5" />
+        </div>
+      `).join('');
+
       ['measurements', 'interview', 'wellness', 'testing'].forEach(section => {
         const el = document.getElementById(section + 'Fields');
         el.innerHTML = client[section].map((item, i) => `
@@ -1119,7 +1323,7 @@
 
     function addCoachingPlan() {
       appState.coaching[appState.coachingType].push({
-        title: appState.coachingType === 'online' ? 'New Online Coaching Slot' : 'New Home PT Client Slot',
+        title: appState.coachingType === 'online' ? 'New Online Coaching Plan' : 'New Home PT Client Slot',
         schedule: 'Days & Timing',
         fee: '₹ / month',
         notes: 'Session details, location or Zoom link...'
@@ -1144,7 +1348,7 @@
       const c = appState.clients[appState.activeClientIdx];
       const meas = c.measurements.map(m => `• ${m.label}: ${m.value}`).join('\n');
       const tests = c.testing.slice(0, 8).map(t => `• ${t.label}: ${t.value}`).join('\n');
-      const msg = `*FitCoach Pro — Client Assessment Report*\nCoach: ${appState.coach.name}\nClient: ${c.name}\n\n*Measurements & Macros:*\n${meas}\n\n*Fitness Testing:*\n${tests}`;
+      const msg = `*FitCoach Pro — Client Assessment Report*\nCoach: ${appState.coach.name}\nClient: ${c.name}\nSessions: ${c.sessionsDone}/${c.packTotal}\n\n*Measurements & Macros:*\n${meas}\n\n*Fitness Testing:*\n${tests}`;
       sendToClientWhatsApp(msg);
     }
 
@@ -1155,7 +1359,15 @@
       sendToClientWhatsApp(msg);
     }
 
+    function applyClientLinkRestrictions() {
+      if (isClientLink) {
+        document.getElementById('coachClientSwitch').classList.add('hidden');
+        document.getElementById('coachProfilePanel').classList.add('hidden');
+      }
+    }
+
     function renderAll() {
+      applyClientLinkRestrictions();
       renderCoachProfile();
       renderClientsBar();
       renderExercisesSection();
